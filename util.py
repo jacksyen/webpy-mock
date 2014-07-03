@@ -15,11 +15,20 @@ class MD5Util:
         md.update(param)
         return md.hexdigest()
 
-
 '''
 随机数帮助类
 '''
 class RandomUtil:
+
+    @staticmethod
+    def random6Str():
+        num = random.randint(100000, 999999)
+        return result
+
+    @staticmethod
+    def random9Str():
+        num = random.random() * (1<<29)
+        return int(num)
 
     @staticmethod
     def random16Str():
@@ -31,6 +40,17 @@ class RandomUtil:
     @staticmethod
     def random32Str():
         return uuid.uuid1().hex
+
+
+'''
+日期帮助类
+'''
+class DateUtil:
+    
+    @staticmethod
+    def getDate(format='%Y%m'):
+        t = time.localtime(time.time())
+        return tiem.strftime(format, t)
 
 '''
 class JSONUtil:

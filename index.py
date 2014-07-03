@@ -7,6 +7,7 @@ import time
 import random
 from util import RandomUtil
 from util import MD5Util
+from util import DateUtil
 from webglobal import Global
 
 urls = (
@@ -131,8 +132,8 @@ class index:
             'outBizNo': args.get('outBizNo'),
             'orderStatus': orderStatus,
             'orderNo': args.get('orderNo'),
-            'easyLifeOrderNo': RandomUtil.random32Str(),
-            'channelId': '0002bd',
+            'easyLifeOrderNo': easyLifeOrderNo,
+            'channelId': RandomUtil.random6Str(),
             'balance': GLOBAL_BALANCE,
             'resultCode': resultInfo.get('applyResultCode'),
             'paymentResultInfos': paymentResultInfos
@@ -155,7 +156,7 @@ class index:
             'success': 'T',
             'resultMessage': '',
             'signType': 'MD5',
-            'channelId': '0002bd',
+            'channelId': RandomUtil.random6Str(),
             'orderNo': args.get('orderNo')
         }
         result = {
@@ -195,14 +196,14 @@ class index:
             'address': resultInfo.get('address'),
             'agencyCode': args.get('agencyCode'),
             'extendInfo': {},
-            'items': [{'channelCode': '000031231', 'charge': '0.00', 'month': '201404', 'payables': '128.00', 'type': args.get('queryType')}],
+            'items': [{'channelCode': RandomUtil.random9Str(), 'charge': '0.00', 'month': DateUtil.getDate(), 'payables': resultInfo.get('money'), 'type': args.get('queryType')}],
             'success': resultInfo.get('success'),
             'userCode': resultInfo.get('userCode'),
             'username': resultInfo.get('username')
         }
         data = {
             'resultCode': resultInfo.get('queryResultCode'),
-            'totalPayable': '128.00',
+            'totalPayable': resultInfo.get('money'),
             'info': info,
             'orderNo': args.get('orderNo'),
             'channelId': '312312312432',
@@ -211,7 +212,7 @@ class index:
         }
         result = {
             'data': data,
-            'sign': '63504b246ddc159b45d58f017b484e7f'
+            'sign': RandomUtil.random32Str()
         }
         return json.dumps(result);
 
