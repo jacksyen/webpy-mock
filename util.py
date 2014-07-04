@@ -23,7 +23,7 @@ class RandomUtil:
     @staticmethod
     def random6Str():
         num = random.randint(100000, 999999)
-        return result
+        return num
 
     @staticmethod
     def random9Str():
@@ -46,11 +46,11 @@ class RandomUtil:
 日期帮助类
 '''
 class DateUtil:
-    
+
     @staticmethod
     def getDate(format='%Y%m'):
         t = time.localtime(time.time())
-        return tiem.strftime(format, t)
+        return time.strftime(format, t)
 
 '''
 class JSONUtil:

@@ -15,9 +15,6 @@ urls = (
 )
 key='9a7520152a7a97cfc76c82454463a83c'
 
-# 备付金
-GLOBAL_BALANCE = 10000.00
-
 GLOBAL_ACCOUNT = [
     # 水费
     {'1000001': {'userCode': '1000001', 'username': u'东家', 'success': 'true', 'queryResultCode': '0000000','address': u'重庆市渝中区88号', 'memo': '缴费成功', 'money': 120.00, 'status': 'SUCCESS', 'applyResultCode': '0000000'},
@@ -69,7 +66,7 @@ class index:
     账单缴费
     '''
     def applyBill(self, args):
-        global GLOBAL_BALANCE
+        Global.GLOBAL_BALANCE
         queryType = args.get('paymentType')
         globals = {}
         if queryType == '000010':
@@ -113,7 +110,7 @@ class index:
         if resultInfo.get('status') == 'SUCCESS':
             orderStatus = 'SUCCESS'
             resultCode = '0000000'
-            GLOBAL_BALANCE = GLOBAL_BALANCE - float(args.get('paymentAmount'))
+            Global.GLOBAL_BALANCE = Global.GLOBAL_BALANCE - float(args.get('paymentAmount'))
         elif resultInfo.get('status') == 'FAIL':
             orderStatus = 'FAIL'
             resultCode = '0000106'
@@ -134,7 +131,7 @@ class index:
             'orderNo': args.get('orderNo'),
             'easyLifeOrderNo': easyLifeOrderNo,
             'channelId': RandomUtil.random6Str(),
-            'balance': GLOBAL_BALANCE,
+            'balance': Global.GLOBAL_BALANCE,
             'resultCode': resultInfo.get('applyResultCode'),
             'paymentResultInfos': paymentResultInfos
         }
@@ -221,9 +218,7 @@ class CheckThread(threading.Thread):
     def __init__(self):
         print u'线程启动'
 
-    def run(self, args):
-        print u'线程开始运行,args:%s' %args
-
+    def run(self):
         while True:
             for request in Global.GLOBAL_REQUEST:
                 info = Global.GLOBAL_REQUEST.get(request)
@@ -243,20 +238,19 @@ class CheckThread(threading.Thread):
                         globals = GLOBAL_ACCOUNT[3]
                     account = globals.get(info.get('userCode'))
                     flagNum = 0
-                    print '---------------%s' %account.get('rechangeStatus')
                     if account.get('rechangeStatus'):
                         if account.get('rechangeStatus') == 'SUCCESS':
                             flagNum = 1
                     res = self.getresult(info.get('paymentAmount'), flagNum)
                     info['status'] = res.get('status')
                     info['resultCode'] = res.get('resultCode')
-                    print u'修改订单：%s状态为%s，剩余备付金：%s' %(info.get('easyLifeOrderNo'), info.get('status'), GLOBAL_BALANCE)
+                    print u'修改订单：%s状态为%s，剩余备付金：%s' %(info.get('easyLifeOrderNo'), info.get('status'), Global.GLOBAL_BALANCE)
                     Global.GLOBAL_REQUEST[request] = info
             #10秒后重新检测
             time.sleep(10)
 
     def getresult(self, money, flagNum=0):
-        global GLOBAL_BALANCE
+        Global.GLOBAL_BALANCE
         result = {}
         if flagNum:
             num = flagNum
@@ -265,7 +259,7 @@ class CheckThread(threading.Thread):
         if num == 1:
             result['status'] = 'SUCCESS'
             result['resultCode'] = '0000000'
-            GLOBAL_BALANCE = GLOBAL_BALANCE - money
+            Global.GLOBAL_BALANCE = Global.GLOBAL_BALANCE - money
         else:
             result['status'] = 'FAIL'
             result['resultCode'] = '0000106'
@@ -276,12 +270,12 @@ def func():
     app = web.application(urls, globals())
     app.run()
 
-def func2(args):
+def func2():
     check = CheckThread()
-    check.run(args)
+    check.run()
 
 if __name__ == '__main__':
     app1 = threading.Thread(target=func)
-    app2 = threading.Thread(target=func2, args=(Global.GLOBAL_REQUEST,))
+    app2 = threading.Thread(target=func2)
     app1.start()
     app2.start()

@@ -1,1 +1,1 @@
-python index.py
+python index.py 8000 &
