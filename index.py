@@ -241,6 +241,8 @@ class CheckThread(threading.Thread):
                     if account.get('rechangeStatus'):
                         if account.get('rechangeStatus') == 'SUCCESS':
                             flagNum = 1
+                        else:
+                            flagNum = 2
                     res = self.getresult(info.get('paymentAmount'), flagNum)
                     info['status'] = res.get('status')
                     info['resultCode'] = res.get('resultCode')
