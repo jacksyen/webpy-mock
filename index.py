@@ -1,10 +1,12 @@
 # -*- coding:utf-8 -*-
 
+import os
 import web
 import json
 import threading
 import time
 import random
+import logging
 from util import RandomUtil
 from util import MD5Util
 from util import DateUtil
@@ -135,14 +137,14 @@ class index:
             'resultCode': resultInfo.get('applyResultCode'),
             'paymentResultInfos': paymentResultInfos
         }
-        return json.dumps(result);
+        r = json.dumps(result)
+        logging.info(u'缴费返回:%s', r)
+        return r
 
     '''
     查询缴费状态
     '''
     def queryStatus(self, args):
-
-        print 'global request:%s' %Global.GLOBAL_REQUEST
         requestinfo = Global.GLOBAL_REQUEST.get(args.get('outBizNo'))
         if requestinfo == None:
             return None
@@ -160,7 +162,9 @@ class index:
             'sign': RandomUtil.random32Str(),
             'data': data
         }
-        return json.dumps(result);
+        r = json.dumps(result)
+        logging.info(u'查询缴费状态返回:%s', r)
+        return r
 
     '''
     查询欠费
@@ -170,15 +174,15 @@ class index:
         if queryType == '000010':
             # 水费
             globals = GLOBAL_ACCOUNT[0]
-            return self.queryHandle(args, globals)
         elif queryType == '000020':
             # 气费
             globals = GLOBAL_ACCOUNT[1]
-            return self.queryHandle(args, globals)
         elif queryType == '000030':
             # 电费
             globals = GLOBAL_ACCOUNT[2]
-            return self.queryHandle(args, globals)
+        result = self.queryHandle(args, globals)
+        logging.info(u'查询欠费返回：%s', str(result))
+        return result
 
 
     '''
@@ -188,7 +192,6 @@ class index:
         resultInfo = globals.get(args.get('userCode'))
         if resultInfo == None:
             return None
-        print resultInfo
         info = {
             'address': resultInfo.get('address'),
             'agencyCode': args.get('agencyCode'),
@@ -211,43 +214,55 @@ class index:
             'data': data,
             'sign': RandomUtil.random32Str()
         }
-        return json.dumps(result);
+        return json.dumps(result)
 
 class CheckThread(threading.Thread):
 
     def __init__(self):
-        print u'线程启动'
+        logging.info(u'线程启动')
+
+    def execute(self):
+        for request in Global.GLOBAL_REQUEST:
+            info = Global.GLOBAL_REQUEST.get(request)
+            if info.get('status') == 'PROCESSING':
+                globals = {}
+                if info.get('paymentType') == '000010':
+                    #水费
+                    globals = GLOBAL_ACCOUNT[0]
+                elif info.get('paymentType') == '000020':
+                    # 气费
+                    globals = GLOBAL_ACCOUNT[1]
+                elif info.get('paymentType') == '000030':
+                    # 电费
+                    globals = GLOBAL_ACCOUNT[2]
+                elif info.get('paymentType') == '000040':
+                    # 手机充值
+                    globals = GLOBAL_ACCOUNT[3]
+                account = globals.get(info.get('userCode'))
+                flagNum = 0
+                if account.get('rechangeStatus'):
+                    if account.get('rechangeStatus') == 'SUCCESS':
+                        flagNum = 1
+                    else:
+                        flagNum = 2
+                res = self.getresult(info.get('paymentAmount'), flagNum)
+                info['status'] = res.get('status')
+                info['resultCode'] = res.get('resultCode')
+                logging.info(u'修改订单：%s状态为%s，剩余备付金：%s', info.get('easyLifeOrderNo'), info.get('status'), Global.GLOBAL_BALANCE)
+                Global.GLOBAL_REQUEST[request] = info
 
     def run(self):
         while True:
-            for request in Global.GLOBAL_REQUEST:
-                info = Global.GLOBAL_REQUEST.get(request)
-                if info.get('status') == 'PROCESSING':
-                    globals = {}
-                    if info.get('paymentType') == '000010':
-                        #水费
-                        globals = GLOBAL_ACCOUNT[0]
-                    elif info.get('paymentType') == '000020':
-                        # 气费
-                        globals = GLOBAL_ACCOUNT[1]
-                    elif info.get('paymentType') == '000030':
-                        # 电费
-                        globals = GLOBAL_ACCOUNT[2]
-                    elif info.get('paymentType') == '000040':
-                        # 手机充值
-                        globals = GLOBAL_ACCOUNT[3]
-                    account = globals.get(info.get('userCode'))
-                    flagNum = 0
-                    if account.get('rechangeStatus'):
-                        if account.get('rechangeStatus') == 'SUCCESS':
-                            flagNum = 1
-                    res = self.getresult(info.get('paymentAmount'), flagNum)
-                    info['status'] = res.get('status')
-                    info['resultCode'] = res.get('resultCode')
-                    print u'修改订单：%s状态为%s，剩余备付金：%s' %(info.get('easyLifeOrderNo'), info.get('status'), Global.GLOBAL_BALANCE)
-                    Global.GLOBAL_REQUEST[request] = info
-            #10秒后重新检测
-            time.sleep(10)
+            try:
+                self.execute()
+                #10秒后重新检测
+                time.sleep(10)
+            except KeyboardInterrupt:
+                logging.error(u'用户打断')
+                exit(-1)
+            except Exception, err:
+                logging.error(u'定时修改状态出现异常:%s.', err)
+
 
     def getresult(self, money, flagNum=0):
         Global.GLOBAL_BALANCE
@@ -275,6 +290,21 @@ def func2():
     check.run()
 
 if __name__ == '__main__':
+    path = "log"
+    if not os.path.exists(path):
+        os.mkdir(path)
+    # 日志系统
+    filePath = "%s/%s.log" %(path, time.strftime("%Y-%m-%d",time.localtime()))
+    logging.basicConfig(level=logging.INFO,
+                        format='%(asctime)s %(levelname)s: %(message)s',
+                        datefmt='%Y-%m-%d %H:%M:%S',
+                        filename=filePath,
+                        filemode='a')
+    console = logging.StreamHandler()
+    console.setLevel(logging.INFO)
+    console.setFormatter(logging.Formatter('%(asctime)s %(levelname)s: %(message)s', '%H:%M:%S'))
+    logging.getLogger('').addHandler(console)
+    logging.info(u'-----------易生活mock系统启动-----------')
     app1 = threading.Thread(target=func)
     app2 = threading.Thread(target=func2)
     app1.start()
