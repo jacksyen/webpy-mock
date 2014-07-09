@@ -263,7 +263,6 @@ class CheckThread(threading.Thread):
             except Exception, err:
                 logging.error(u'定时修改状态出现异常:%s.', err)
 
-
     def getresult(self, money, flagNum=0):
         Global.GLOBAL_BALANCE
         result = {}
