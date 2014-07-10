@@ -11,8 +11,7 @@ class MD5Util:
 
     @staticmethod
     def md5(param):
-        md = hashlib.md5()
-        md.update(param)
+        md = hashlib.md5(param.encode('utf8'))
         return md.hexdigest()
 
 '''

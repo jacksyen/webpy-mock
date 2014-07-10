@@ -15,6 +15,7 @@ from webglobal import Global
 urls = (
     '/','index'
 )
+
 key='9a7520152a7a97cfc76c82454463a83c'
 
 GLOBAL_ACCOUNT = [
@@ -127,7 +128,6 @@ class index:
         result = {
             'success': 'T',
             'signType': 'MD5',
-            'sign': '84142521f0c8d29ab4ecfcdc8a92d88a',
             'outBizNo': args.get('outBizNo'),
             'orderStatus': orderStatus,
             'orderNo': args.get('orderNo'),
@@ -135,8 +135,15 @@ class index:
             'channelId': RandomUtil.random6Str(),
             'balance': Global.GLOBAL_BALANCE,
             'resultCode': resultInfo.get('applyResultCode'),
-            'paymentResultInfos': paymentResultInfos
+            'paymentResultInfos': '%s' %paymentResultInfos
         }
+        from operator import itemgetter
+        import urllib
+        sortList = sorted(result.iteritems(), key=lambda d:d[0])
+        sign = '&'.join(['%s=%s' %(k,v) for k,v in sortList])
+        sign += key
+        result['sign'] = MD5Util.md5(sign)
+
         r = json.dumps(result)
         logging.info(u'缴费返回:%s', r)
         return r
@@ -158,9 +165,10 @@ class index:
             'channelId': RandomUtil.random6Str(),
             'orderNo': args.get('orderNo')
         }
+        sign = '%s= %s%s' %('data', json.dumps(data), key)
         result = {
-            'sign': RandomUtil.random32Str(),
-            'data': data
+            'data': data,
+            'sign': MD5Util.md5(sign)
         }
         r = json.dumps(result)
         logging.info(u'查询缴费状态返回:%s', r)
@@ -210,9 +218,10 @@ class index:
             'signType': 'MD5',
             'success': 'T'
         }
+        sign = '%s= %s%s' %('data', json.dumps(data), key)
         result = {
             'data': data,
-            'sign': RandomUtil.random32Str()
+            'sign': MD5Util.md5(sign)
         }
         return json.dumps(result)
 
