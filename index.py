@@ -22,17 +22,20 @@ GLOBAL_ACCOUNT = [
     # 水费
     {'1000001': {'userCode': '1000001', 'username': u'东家', 'success': 'true', 'queryResultCode': '0000000','address': u'重庆市渝中区88号', 'memo': '缴费成功', 'money': 120.00, 'status': 'SUCCESS', 'applyResultCode': '0000000'},
      '1000002': {'userCode': '1000002', 'username': u'李嘉家', 'success': 'true', 'queryResultCode': '0000000','address': u'重庆市江北区999号', 'memo': '缴费失败', 'money': 20.00, 'status': 'FAIL', 'applyResultCode': '0000106'},
-     '1000003': {'userCode': '1000002', 'username': u'李嘉家', 'success': 'true', 'queryResultCode': '0000000','address': u'重庆市江北区999号', 'memo': '缴费处理中', 'money': 10.90, 'status': 'HANGUP', 'applyResultCode': '0000107'}
+     '1000003': {'userCode': '1000002', 'username': u'李嘉家', 'success': 'true', 'queryResultCode': '0000000','address': u'重庆市江北区999号', 'memo': '缴费处理中', 'money': 10.90, 'status': 'HANGUP', 'applyResultCode': '0000107'},
+     '1000004': {'userCode': '1000004', 'username': u'周博', 'success': 'true', 'queryResultCode': '0000121'}
     },
     # 气费
     {'2000001': {'userCode': '2000001', 'username': u'么么', 'success': 'true', 'queryResultCode': '0000000','address': u'重庆市渝中区门店8号', 'memo': '缴费成功', 'money': 312.88, 'status': 'SUCCESS', 'applyResultCode': '0000000'},
      '2000002': {'userCode': '2000002', 'username': u'刘尼', 'success': 'true', 'queryResultCode': '0000000','address': u'重庆市江北区洋河北路10号', 'memo': '缴费失败', 'money': 39.09, 'status': 'FAIL', 'applyResultCode': '0000106'},
-     '2000003': {'userCode': '2000003', 'username': u'哈格', 'success': 'true', 'queryResultCode': '0000000','address': u'重庆市九龙坡区12号', 'memo': '缴费处理中', 'money': 19.10, 'status': 'HANGUP', 'applyResultCode': '0000107'}
+     '2000003': {'userCode': '2000003', 'username': u'哈格', 'success': 'true', 'queryResultCode': '0000000','address': u'重庆市九龙坡区12号', 'memo': '缴费处理中', 'money': 19.10, 'status': 'HANGUP', 'applyResultCode': '0000107'},
+     '2000004': {'userCode': '2000004', 'username': u'张尼', 'success': 'true', 'queryResultCode': '0000121'}
     },
     # 电费
     {'3000001': {'userCode': '3000001', 'username': u'占方式', 'success': 'true', 'queryResultCode': '0000000','address': u'重庆市渝中区11号', 'memo': '缴费成功', 'money': 81.20, 'status': 'SUCCESS', 'applyResultCode': '0000000'},
      '3000002': {'userCode': '3000002', 'username': u'张三丰', 'success': 'true', 'queryResultCode': '0000000','address': u'重庆市江北区健康路121号', 'memo': '缴费失败', 'money': 9.02, 'status': 'FAIL', 'applyResultCode': '0000106'},
-     '3000003': {'userCode': '3000003', 'username': u'杨富', 'success': 'true', 'queryResultCode': '0000000','address': u'重庆市渝中区龙组路89号', 'memo': '缴费处理中', 'money': 190.90, 'status': 'HANGUP', 'applyResultCode': '0000107'}
+     '3000003': {'userCode': '3000003', 'username': u'杨富', 'success': 'true', 'queryResultCode': '0000000','address': u'重庆市渝中区龙组路89号', 'memo': '缴费处理中', 'money': 190.90, 'status': 'HANGUP', 'applyResultCode': '0000107'},
+     '3000004': {'userCode': '3000004', 'username': u'王博', 'success': 'true', 'queryResultCode': '0000121'}
     },
     # 手机充值
     {
@@ -200,24 +203,28 @@ class index:
         resultInfo = globals.get(args.get('userCode'))
         if resultInfo == None:
             return None
-        info = {
-            'address': resultInfo.get('address'),
-            'agencyCode': args.get('agencyCode'),
-            'extendInfo': {},
-            'items': [{'channelCode': RandomUtil.random9Str(), 'charge': '0.00', 'month': DateUtil.getDate(), 'payables': resultInfo.get('money'), 'type': args.get('queryType')}],
-            'success': resultInfo.get('success'),
-            'userCode': resultInfo.get('userCode'),
-            'username': resultInfo.get('username')
-        }
+        resultCode = resultInfo.get('queryResultCode')
         data = {
-            'resultCode': resultInfo.get('queryResultCode'),
-            'totalPayable': resultInfo.get('money'),
-            'info': info,
+            'resultCode': resultCode,
             'orderNo': args.get('orderNo'),
-            'channelId': '312312312432',
+            'channelId': RandomUtil.random6Str(),
             'signType': 'MD5',
             'success': 'T'
         }
+        if resultCode == '0000000':
+            info = {
+                'address': resultInfo.get('address'),
+                'agencyCode': args.get('agencyCode'),
+                'extendInfo': {},
+                'items': [{'channelCode': RandomUtil.random9Str(), 'charge': '0.00', 'month': DateUtil.getDate(), 'payables': resultInfo.get('money'), 'type': args.get('queryType')}],
+                'success': resultInfo.get('success'),
+                'userCode': resultInfo.get('userCode'),
+                'username': resultInfo.get('username')
+            }
+            data['info'] = info
+            data['totalPayable'] = resultInfo.get('money')
+        elif resultCode == '0000121':
+            data['resultMessage'] = u'没有欠费信息'
         sign = '%s= %s%s' %('data', json.dumps(data), key)
         result = {
             'data': data,
