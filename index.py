@@ -202,8 +202,9 @@ class index:
     def queryHandle(self, args, globals):
         resultInfo = globals.get(args.get('userCode'))
         if resultInfo == None:
-            return None
-        resultCode = resultInfo.get('queryResultCode')
+            resultCode = '0000120'
+        else:
+            resultCode = resultInfo.get('queryResultCode')
         data = {
             'resultCode': resultCode,
             'orderNo': args.get('orderNo'),
@@ -223,8 +224,8 @@ class index:
             }
             data['info'] = info
             data['totalPayable'] = resultInfo.get('money')
-        elif resultCode == '0000121':
-            data['resultMessage'] = u'没有欠费信息'
+        else:
+            data['resultMessage'] = Global.GLOBAL_RESP_CODE.get(resultCode)
         sign = '%s= %s%s' %('data', json.dumps(data), key)
         result = {
             'data': data,
