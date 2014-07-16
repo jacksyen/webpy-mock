@@ -11,6 +11,7 @@ from util import RandomUtil
 from util import MD5Util
 from util import DateUtil
 from webglobal import Global
+from dbase import SQLite
 
 urls = (
     '/','index'
@@ -50,7 +51,7 @@ GLOBAL_ACCOUNT = [
 class index:
 
     def __init__(self):
-        pass
+        self.db = SQLite().cursor
 
     def GET(self):
         return self.execute()
@@ -77,7 +78,6 @@ class index:
     账单缴费
     '''
     def applyBill(self, args):
-        Global.GLOBAL_BALANCE
         queryType = args.get('paymentType')
         globals = {}
         if queryType == '000010':
@@ -114,7 +114,9 @@ class index:
         if resultInfo.get('status') == 'SUCCESS':
             orderStatus = 'SUCCESS'
             resultCode = '0000000'
-            Global.GLOBAL_BALANCE = float(format(Global.GLOBAL_BALANCE - float(args.get('paymentAmount')), '.2f'))
+            # 修改商户预存款
+            balance = float(format(Global.GLOBAL_BALANCE - float(args.get('paymentAmount')), '.2f'))
+            self.db.execute('UPDATE %s SET balance = ? WHERE merchantkey = ?' %Global.GLOBAL_TABLE_BALANCE, (balance, easyLifeOrderNo))
         elif resultInfo.get('status') == 'FAIL':
             orderStatus = 'FAIL'
             resultCode = '0000106'
@@ -122,7 +124,8 @@ class index:
             orderStatus = 'PROCESSING'
             resultCode = '0000107'
 
-        Global.db.execute('INSERT INTO easylife_payment_order(easylifeorderno, outbizno, status, paymenttype, usercode, resultcode, paymentamount) VALUES("%s", "%s", "%s", "%s", "%s", "%s", "%.2f")' %(easyLifeOrderNo, args.get('outBizNo'), orderStatus, queryType, args.get('userCode'), resultCode, float(args.get('paymentAmount'))))
+        self.db.execute('INSERT INTO easylife_payment_order(easylifeorderno, outbizno, status, paymenttype, usercode, resultcode, paymentamount) VALUES(?, ?, ?, ?, ?, ?, ?)', (easyLifeOrderNo, args.get('outBizNo'), orderStatus, queryType, args.get('userCode'), resultCode, float(args.get('paymentAmount'))))
+
         result = {
             'success': 'T',
             'signType': 'MD5',
@@ -150,8 +153,7 @@ class index:
     查询缴费状态
     '''
     def queryStatus(self, args):
-        query = {'outBizNo': args.get('outBizNo')}
-        Global.db.execute('SELECT * FROM easylife_payment_order WHERE outbizno:outBizNo', query)
+        self.db.execute('SELECT * FROM easylife_payment_order WHERE outbizno = ?', (args.get('outBizNo'),))
         requestinfo = Global.db.fetchone()
         data = {
             'success': 'T',
@@ -236,12 +238,12 @@ class CheckThread(threading.Thread):
 
     def __init__(self):
         logging.info(u'线程启动')
+        self.db = SQLite().cursor
 
     def execute(self):
         #
-        Global.db.execute('SELECT * FROM easylife_payment_order WHERE status:status', {'status': 'PROCESSING'})
-        procs = Global.db.fetchall()
-        '''
+        self.db.execute('SELECT * FROM easylife_payment_order WHERE status=?', ('PROCESSING',))
+        procs = self.db.fetchall()
         for info in procs:
             if info['paymentType'] == '000010':
                 #水费
@@ -263,10 +265,8 @@ class CheckThread(threading.Thread):
                 else:
                     flagNum = 2
             res = self.getresult(info['paymentAmount'], flagNum)
-            Global.db.execute('UPDATE easylife_payment_order SET status = ?, resultcode = ?', (res.get('status'), res.get('resultCode')))
-            Global.db.commit()
+            self.db.execute('UPDATE easylife_payment_order SET status = ?, resultcode = ? WHERE easylifeorderno = ?', (res.get('status'), res.get('resultCode'), info.get('easyLifeOrderNo')))
             logging.info(u'修改订单：%s状态为%s，剩余备付金：%s', info.get('easyLifeOrderNo'), res.get('status'), Global.GLOBAL_BALANCE)
-        '''
 
     def run(self):
         while True:

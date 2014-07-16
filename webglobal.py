@@ -1,5 +1,4 @@
 # -*- coding:utf-8 -*-
-from dbase import SQLite
 
 class Global:
 
@@ -9,7 +8,14 @@ class Global:
     # 备付金
     GLOBAL_BALANCE = 10000.00
 
+    # 商户key
+    GLOBAL_MERCHANTS = {'lencee': '9a7520152a7a97cfc76c82454463a83c'}
 
+    # 缴费表
+    GLOBAL_TABLE_PAYMENT = 'easylife_payment_order'
+    # 预存款
+    GLOBAL_TABLE_BALANCE = 'easylife_merchant_balance'
+    
 
     # 结果码
     GLOBAL_RESP_CODE = {
