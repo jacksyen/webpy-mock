@@ -48,6 +48,10 @@ GLOBAL_ACCOUNT = [
 
 
 class index:
+
+    def __init__(self):
+        pass
+
     def GET(self):
         return self.execute()
 
@@ -107,13 +111,6 @@ class index:
             }
         ]
         easyLifeOrderNo = RandomUtil.random32Str()
-        request = {
-            'easyLifeOrderNo': easyLifeOrderNo,
-            'outBizNo': args.get('outBizNo'),
-            'paymentType': queryType,
-            'paymentAmount': float(args.get('paymentAmount')),
-            'userCode': args.get('userCode')
-        }
         if resultInfo.get('status') == 'SUCCESS':
             orderStatus = 'SUCCESS'
             resultCode = '0000000'
@@ -125,10 +122,7 @@ class index:
             orderStatus = 'PROCESSING'
             resultCode = '0000107'
 
-        request['status'] = orderStatus
-        request['resultCode'] = resultCode
-        Global.GLOBAL_REQUEST[args.get('outBizNo')] = request
-
+        Global.db.execute('INSERT INTO easylife_payment_order(easylifeorderno, outbizno, status, paymenttype, usercode, resultcode, paymentamount) VALUES("%s", "%s", "%s", "%s", "%s", "%s", "%.2f")' %(easyLifeOrderNo, args.get('outBizNo'), orderStatus, queryType, args.get('userCode'), resultCode, float(args.get('paymentAmount'))))
         result = {
             'success': 'T',
             'signType': 'MD5',
@@ -156,19 +150,21 @@ class index:
     查询缴费状态
     '''
     def queryStatus(self, args):
-        requestinfo = Global.GLOBAL_REQUEST.get(args.get('outBizNo'))
-        if requestinfo == None:
-            return None
-
+        query = {'outBizNo': args.get('outBizNo')}
+        Global.db.execute('SELECT * FROM easylife_payment_order WHERE outbizno:outBizNo', query)
+        requestinfo = Global.db.fetchone()
         data = {
-            'resultCode': requestinfo.get('resultCode'),
-            'status': requestinfo.get('status'),
             'success': 'T',
-            'resultMessage': '',
             'signType': 'MD5',
             'channelId': RandomUtil.random6Str(),
             'orderNo': args.get('orderNo')
         }
+        if requestinfo:
+            data['resultCode'] = requestinfo.get('resultCode')
+            data['status'] = requestinfo.get('status')
+        else:
+            data['resultCode'] = '0000100'
+            data['resultMessage'] = u"easyLifeOrderNo:订单号错误"
         sign = '%s= %s%s' %('data', json.dumps(data), key)
         result = {
             'data': data,
@@ -182,6 +178,7 @@ class index:
     查询欠费
     '''
     def queryBill(self, args):
+        globals = {}
         queryType = args.get('queryType')
         globals = {}
         if queryType == '000010':
@@ -241,34 +238,35 @@ class CheckThread(threading.Thread):
         logging.info(u'线程启动')
 
     def execute(self):
-        for request in Global.GLOBAL_REQUEST:
-            info = Global.GLOBAL_REQUEST.get(request)
-            if info.get('status') == 'PROCESSING':
-                globals = {}
-                if info.get('paymentType') == '000010':
-                    #水费
-                    globals = GLOBAL_ACCOUNT[0]
-                elif info.get('paymentType') == '000020':
-                    # 气费
-                    globals = GLOBAL_ACCOUNT[1]
-                elif info.get('paymentType') == '000030':
-                    # 电费
-                    globals = GLOBAL_ACCOUNT[2]
-                elif info.get('paymentType') == '000040':
-                    # 手机充值
-                    globals = GLOBAL_ACCOUNT[3]
-                account = globals.get(info.get('userCode'))
-                flagNum = 0
-                if account.get('rechangeStatus'):
-                    if account.get('rechangeStatus') == 'SUCCESS':
-                        flagNum = 1
-                    else:
-                        flagNum = 2
-                res = self.getresult(info.get('paymentAmount'), flagNum)
-                info['status'] = res.get('status')
-                info['resultCode'] = res.get('resultCode')
-                logging.info(u'修改订单：%s状态为%s，剩余备付金：%s', info.get('easyLifeOrderNo'), info.get('status'), Global.GLOBAL_BALANCE)
-                Global.GLOBAL_REQUEST[request] = info
+        #
+        Global.db.execute('SELECT * FROM easylife_payment_order WHERE status:status', {'status': 'PROCESSING'})
+        procs = Global.db.fetchall()
+        '''
+        for info in procs:
+            if info['paymentType'] == '000010':
+                #水费
+                globals = GLOBAL_ACCOUNT[0]
+            elif info['paymentType'] == '000020':
+                # 气费
+                globals = GLOBAL_ACCOUNT[1]
+            elif info['paymentType'] == '000030':
+                # 电费
+                globals = GLOBAL_ACCOUNT[2]
+            elif info['paymentType'] == '000040':
+                # 手机充值
+                globals = GLOBAL_ACCOUNT[3]
+                account = globals.get(info['userCode'])
+            flagNum = 0
+            if account.get('rechangeStatus'):
+                if account.get('rechangeStatus') == 'SUCCESS':
+                    flagNum = 1
+                else:
+                    flagNum = 2
+            res = self.getresult(info['paymentAmount'], flagNum)
+            Global.db.execute('UPDATE easylife_payment_order SET status = ?, resultcode = ?', (res.get('status'), res.get('resultCode')))
+            Global.db.commit()
+            logging.info(u'修改订单：%s状态为%s，剩余备付金：%s', info.get('easyLifeOrderNo'), res.get('status'), Global.GLOBAL_BALANCE)
+        '''
 
     def run(self):
         while True:
@@ -281,9 +279,9 @@ class CheckThread(threading.Thread):
                 exit(-1)
             except Exception, err:
                 logging.error(u'定时修改状态出现异常:%s.', err)
+                exit(-1)
 
     def getresult(self, money, flagNum=0):
-        Global.GLOBAL_BALANCE
         result = {}
         if flagNum:
             num = flagNum

@@ -1,4 +1,5 @@
 # -*- coding:utf-8 -*-
+from dbase import SQLite
 
 class Global:
 
@@ -7,6 +8,8 @@ class Global:
 
     # 备付金
     GLOBAL_BALANCE = 10000.00
+
+
 
     # 结果码
     GLOBAL_RESP_CODE = {
