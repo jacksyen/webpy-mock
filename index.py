@@ -182,6 +182,7 @@ class index:
     '''
     def queryBill(self, args):
         queryType = args.get('queryType')
+        globals = {}
         if queryType == '000010':
             # 水费
             globals = GLOBAL_ACCOUNT[0]
