@@ -56,6 +56,7 @@ class index:
 
     def execute(self):
         args = web.input()
+        logging.info('入参:%s', args)
         service = args.get('service')
         if service == 'queryBillPayableAmountV2':
             # 查询账单欠费
