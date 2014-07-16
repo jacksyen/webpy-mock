@@ -116,7 +116,7 @@ class index:
         if resultInfo.get('status') == 'SUCCESS':
             orderStatus = 'SUCCESS'
             resultCode = '0000000'
-            Global.GLOBAL_BALANCE = Global.GLOBAL_BALANCE - float(args.get('paymentAmount'))
+            Global.GLOBAL_BALANCE = format(Global.GLOBAL_BALANCE - float(args.get('paymentAmount')), '.2f')
         elif resultInfo.get('status') == 'FAIL':
             orderStatus = 'FAIL'
             resultCode = '0000106'
@@ -290,7 +290,7 @@ class CheckThread(threading.Thread):
         if num == 1:
             result['status'] = 'SUCCESS'
             result['resultCode'] = '0000000'
-            Global.GLOBAL_BALANCE = Global.GLOBAL_BALANCE - money
+            Global.GLOBAL_BALANCE = format(Global.GLOBAL_BALANCE - float(money), '.2f')
         else:
             result['status'] = 'FAIL'
             result['resultCode'] = '0000106'
