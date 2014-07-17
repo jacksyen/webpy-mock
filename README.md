@@ -18,7 +18,7 @@ webpy-mock
 2. 命令行模式下运行：
 ```shell
 python index.py
-\# 或
+# 或
 python index.py 8000
 ```
 可选参数有`port`，表示具体的端口号，示例：`python index.py 8000`，以本地`8000`端口运行web程序
