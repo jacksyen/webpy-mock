@@ -17,8 +17,6 @@ urls = (
     '/','index'
 )
 
-key='9a7520152a7a97cfc76c82454463a83c'
-
 GLOBAL_ACCOUNT = [
     # 水费
     {'1000001': {'userCode': '1000001', 'username': u'东家', 'success': 'true', 'queryResultCode': '0000000','address': u'重庆市渝中区88号', 'memo': '缴费成功', 'money': 120.00, 'status': 'SUCCESS', 'applyResultCode': '0000000'},
@@ -51,7 +49,13 @@ GLOBAL_ACCOUNT = [
 class index:
 
     def __init__(self):
-        self.db = SQLite().cursor
+        self.conn = SQLite.conn()
+        self.db = self.conn.cursor()
+
+    def __del(self):
+        if self.conn:
+            logging.info(u'销毁conn')
+            SQLite.close(self.conn)
 
     def GET(self):
         return self.execute()
@@ -61,7 +65,7 @@ class index:
 
     def execute(self):
         args = web.input()
-        logging.info('入参:%s', args)
+        logging.info(u'入参:%s', args)
         service = args.get('service')
         if service == 'queryBillPayableAmountV2':
             # 查询账单欠费
@@ -111,12 +115,19 @@ class index:
             }
         ]
         easyLifeOrderNo = RandomUtil.random32Str()
+        self.db.execute('SELECT balance FROM %s WHERE merchantkey = ? ORDER BY updatetime desc limit 1' %Global.GLOBAL_TABLE_BALANCE, (Global.GLOBAL_MERCHANTS.get('lencee'),))
+        querybalance = self.db.fetchone()
+        if not querybalance:
+            # 商户预存款未找到
+            pass
+        balance = querybalance['balance']
         if resultInfo.get('status') == 'SUCCESS':
             orderStatus = 'SUCCESS'
             resultCode = '0000000'
             # 修改商户预存款
-            balance = float(format(Global.GLOBAL_BALANCE - float(args.get('paymentAmount')), '.2f'))
-            self.db.execute('UPDATE %s SET balance = ? WHERE merchantkey = ?' %Global.GLOBAL_TABLE_BALANCE, (balance, easyLifeOrderNo))
+            balance = float(format(balance - float(args.get('paymentAmount')), '.2f'))
+            self.db.execute('UPDATE %s SET balance = ?, updatetime = ? WHERE merchantkey = ?' %Global.GLOBAL_TABLE_BALANCE, (balance, DateUtil.getDate(), Global.GLOBAL_MERCHANTS.get('lencee')))
+            self.conn.commit()
         elif resultInfo.get('status') == 'FAIL':
             orderStatus = 'FAIL'
             resultCode = '0000106'
@@ -125,7 +136,7 @@ class index:
             resultCode = '0000107'
 
         self.db.execute('INSERT INTO easylife_payment_order(easylifeorderno, outbizno, status, paymenttype, usercode, resultcode, paymentamount) VALUES(?, ?, ?, ?, ?, ?, ?)', (easyLifeOrderNo, args.get('outBizNo'), orderStatus, queryType, args.get('userCode'), resultCode, float(args.get('paymentAmount'))))
-
+        self.conn.commit()
         result = {
             'success': 'T',
             'signType': 'MD5',
@@ -134,7 +145,7 @@ class index:
             'orderNo': args.get('orderNo'),
             'easyLifeOrderNo': easyLifeOrderNo,
             'channelId': RandomUtil.random6Str(),
-            'balance': Global.GLOBAL_BALANCE,
+            'balance': balance,
             'resultCode': resultInfo.get('applyResultCode'),
             'paymentResultInfos': '%s' %paymentResultInfos
         }
@@ -142,7 +153,7 @@ class index:
         import urllib
         sortList = sorted(result.iteritems(), key=lambda d:d[0])
         sign = '&'.join(['%s=%s' %(k,v) for k,v in sortList])
-        sign += key
+        sign += Global.GLOBAL_MERCHANTS.get('lencee')
         result['sign'] = MD5Util.md5(sign)
 
         r = json.dumps(result)
@@ -154,7 +165,7 @@ class index:
     '''
     def queryStatus(self, args):
         self.db.execute('SELECT * FROM easylife_payment_order WHERE outbizno = ?', (args.get('outBizNo'),))
-        requestinfo = Global.db.fetchone()
+        requestinfo = self.db.fetchone()
         data = {
             'success': 'T',
             'signType': 'MD5',
@@ -162,12 +173,12 @@ class index:
             'orderNo': args.get('orderNo')
         }
         if requestinfo:
-            data['resultCode'] = requestinfo.get('resultCode')
-            data['status'] = requestinfo.get('status')
+            data['resultCode'] = requestinfo['resultCode']
+            data['status'] = requestinfo['status']
         else:
             data['resultCode'] = '0000100'
             data['resultMessage'] = u"easyLifeOrderNo:订单号错误"
-        sign = '%s= %s%s' %('data', json.dumps(data), key)
+        sign = '%s= %s%s' %('data', json.dumps(data), Global.GLOBAL_MERCHANTS.get('lencee'))
         result = {
             'data': data,
             'sign': MD5Util.md5(sign)
@@ -227,7 +238,7 @@ class index:
             data['totalPayable'] = resultInfo.get('money')
         else:
             data['resultMessage'] = Global.GLOBAL_RESP_CODE.get(resultCode)
-        sign = '%s= %s%s' %('data', json.dumps(data), key)
+        sign = '%s= %s%s' %('data', json.dumps(data), Global.GLOBAL_MERCHANTS.get('lencee'))
         result = {
             'data': data,
             'sign': MD5Util.md5(sign)
@@ -238,12 +249,18 @@ class CheckThread(threading.Thread):
 
     def __init__(self):
         logging.info(u'线程启动')
-        self.db = SQLite().cursor
+        self.conn = SQLite.conn()
+        self.db = self.conn.cursor()
+
+    def __del__(self):
+        if self.conn:
+            logging.info(u'销毁conn')
+            SQLite.close(self.conn)
 
     def execute(self):
-        #
         self.db.execute('SELECT * FROM easylife_payment_order WHERE status=?', ('PROCESSING',))
         procs = self.db.fetchall()
+        account = {}
         for info in procs:
             if info['paymentType'] == '000010':
                 #水费
@@ -265,8 +282,9 @@ class CheckThread(threading.Thread):
                 else:
                     flagNum = 2
             res = self.getresult(info['paymentAmount'], flagNum)
-            self.db.execute('UPDATE easylife_payment_order SET status = ?, resultcode = ? WHERE easylifeorderno = ?', (res.get('status'), res.get('resultCode'), info.get('easyLifeOrderNo')))
-            logging.info(u'修改订单：%s状态为%s，剩余备付金：%s', info.get('easyLifeOrderNo'), res.get('status'), Global.GLOBAL_BALANCE)
+            self.db.execute('UPDATE easylife_payment_order SET status = ?, resultcode = ? WHERE easylifeorderno = ?', (res.get('status'), res.get('resultCode'), info['easyLifeOrderNo']))
+            self.conn.commit()
+            logging.info(u'修改订单：%s状态为%s，剩余备付金：%s', info['easyLifeOrderNo'], res.get('status'), res.get('balance'))
 
     def run(self):
         while True:
@@ -281,19 +299,29 @@ class CheckThread(threading.Thread):
                 logging.error(u'定时修改状态出现异常:%s.', err)
                 exit(-1)
 
+
     def getresult(self, money, flagNum=0):
         result = {}
         if flagNum:
             num = flagNum
         else:
             num = random.randint(1,2)
+        self.db.execute('SELECT balance FROM %s WHERE merchantkey = ? ORDER BY updatetime desc limit 1' %Global.GLOBAL_TABLE_BALANCE, (Global.GLOBAL_MERCHANTS.get('lencee'),))
+        querybalance = self.db.fetchone()
+        if not querybalance:
+            # 商户预存款未找到
+            pass
+        balance = querybalance['balance']
         if num == 1:
             result['status'] = 'SUCCESS'
             result['resultCode'] = '0000000'
-            Global.GLOBAL_BALANCE = float(format(Global.GLOBAL_BALANCE - float(money), '.2f'))
+            balance = float(format(balance - float(money), '.2f'))
+            self.db.execute('UPDATE %s SET balance = ?, updatetime = ? WHERE merchantkey = ?' %Global.GLOBAL_TABLE_BALANCE, (balance, DateUtil.getDate(), Global.GLOBAL_MERCHANTS.get('lencee')))
+            self.conn.commit()
         else:
             result['status'] = 'FAIL'
             result['resultCode'] = '0000106'
+        result['balance'] = balance
         return result
 
 
@@ -321,6 +349,8 @@ if __name__ == '__main__':
     console.setFormatter(logging.Formatter('%(asctime)s %(levelname)s: %(message)s', '%H:%M:%S'))
     logging.getLogger('').addHandler(console)
     logging.info(u'-----------易生活mock系统启动-----------')
+    # 初始化数据
+    SQLite.init()
     app1 = threading.Thread(target=func)
     app2 = threading.Thread(target=func2)
     app1.start()

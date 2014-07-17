@@ -3,10 +3,10 @@
 class Global:
 
     # 请求集合{'外部流水号': {easyLifeOrderNo:'', outBizNo: '', status:'', paymentType: '', userCode:'', paymentAmount:1.00}, '':{}}
-    GLOBAL_REQUEST = {}
+    #GLOBAL_REQUEST = {}
 
     # 备付金
-    GLOBAL_BALANCE = 10000.00
+    #GLOBAL_BALANCE = 10000.00
 
     # 商户key
     GLOBAL_MERCHANTS = {'lencee': '9a7520152a7a97cfc76c82454463a83c'}
@@ -15,7 +15,6 @@ class Global:
     GLOBAL_TABLE_PAYMENT = 'easylife_payment_order'
     # 预存款
     GLOBAL_TABLE_BALANCE = 'easylife_merchant_balance'
-    
 
     # 结果码
     GLOBAL_RESP_CODE = {
