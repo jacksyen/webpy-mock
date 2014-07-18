@@ -10,7 +10,7 @@ class SQLite:
     def init():
         conn = SQLite.conn()
         cursor = conn.cursor()
-        cursor.execute('''CREATE TABLE IF NOT EXISTS %s(easylifeorderno text, outbizno text, status text, paymenttype text, usercode text, resultcode text, paymentamount real)''' %(Global.GLOBAL_TABLE_PAYMENT))
+        cursor.execute('''CREATE TABLE IF NOT EXISTS %s(easylifeorderno text, outbizno text, status text, paymenttype text, usercode text, resultcode text, paymentamount real, addtime datetime, updatetime datetime)''' %(Global.GLOBAL_TABLE_PAYMENT))
 
         cursor.execute('''CREATE TABLE IF NOT EXISTS %s(merchantkey text, balance real, addtime datetime, updatetime datetime)''' %(Global.GLOBAL_TABLE_BALANCE))
 

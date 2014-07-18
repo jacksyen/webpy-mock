@@ -126,7 +126,7 @@ class index:
             resultCode = '0000000'
             # 修改商户预存款
             balance = float(format(balance - float(args.get('paymentAmount')), '.2f'))
-            self.db.execute('UPDATE %s SET balance = ?, updatetime = ? WHERE merchantkey = ?' %Global.GLOBAL_TABLE_BALANCE, (balance, DateUtil.getDate(), Global.GLOBAL_MERCHANTS.get('lencee')))
+            self.db.execute('UPDATE %s SET balance = ?, updatetime = ? WHERE merchantkey = ?' %Global.GLOBAL_TABLE_BALANCE, (balance, DateUtil.getDate(format='%Y-%m-%d %H:%M:%S'), Global.GLOBAL_MERCHANTS.get('lencee')))
             self.conn.commit()
         elif resultInfo.get('status') == 'FAIL':
             orderStatus = 'FAIL'
@@ -135,7 +135,7 @@ class index:
             orderStatus = 'PROCESSING'
             resultCode = '0000107'
 
-        self.db.execute('INSERT INTO easylife_payment_order(easylifeorderno, outbizno, status, paymenttype, usercode, resultcode, paymentamount) VALUES(?, ?, ?, ?, ?, ?, ?)', (easyLifeOrderNo, args.get('outBizNo'), orderStatus, queryType, args.get('userCode'), resultCode, float(args.get('paymentAmount'))))
+        self.db.execute('INSERT INTO easylife_payment_order(easylifeorderno, outbizno, status, paymenttype, usercode, resultcode, paymentamount, addtime, updatetime) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)', (easyLifeOrderNo, args.get('outBizNo'), orderStatus, queryType, args.get('userCode'), resultCode, float(args.get('paymentAmount')), DateUtil.getDate(format='%Y-%m-%d %H:%M:%S'), DateUtil.getDate(format='%Y-%m-%d %H:%M:%S')))
         self.conn.commit()
         result = {
             'success': 'T',
@@ -282,7 +282,7 @@ class CheckThread(threading.Thread):
                 else:
                     flagNum = 2
             res = self.getresult(info['paymentAmount'], flagNum)
-            self.db.execute('UPDATE easylife_payment_order SET status = ?, resultcode = ? WHERE easylifeorderno = ?', (res.get('status'), res.get('resultCode'), info['easyLifeOrderNo']))
+            self.db.execute('UPDATE easylife_payment_order SET status = ?, resultcode = ?, updatetime = ? WHERE easylifeorderno = ?', (res.get('status'), res.get('resultCode'), info['easyLifeOrderNo'], DateUtil.getDate(format='%Y-%m-%d %H:%M:%S')))
             self.conn.commit()
             logging.info(u'修改订单：%s状态为%s，剩余备付金：%s', info['easyLifeOrderNo'], res.get('status'), res.get('balance'))
 
@@ -316,7 +316,7 @@ class CheckThread(threading.Thread):
             result['status'] = 'SUCCESS'
             result['resultCode'] = '0000000'
             balance = float(format(balance - float(money), '.2f'))
-            self.db.execute('UPDATE %s SET balance = ?, updatetime = ? WHERE merchantkey = ?' %Global.GLOBAL_TABLE_BALANCE, (balance, DateUtil.getDate(), Global.GLOBAL_MERCHANTS.get('lencee')))
+            self.db.execute('UPDATE %s SET balance = ?, updatetime = ? WHERE merchantkey = ?' %Global.GLOBAL_TABLE_BALANCE, (balance, DateUtil.getDate(format='%Y-%m-%d %H:%M:%S'), Global.GLOBAL_MERCHANTS.get('lencee')))
             self.conn.commit()
         else:
             result['status'] = 'FAIL'
