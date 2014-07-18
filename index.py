@@ -282,7 +282,7 @@ class CheckThread(threading.Thread):
                 else:
                     flagNum = 2
             res = self.getresult(info['paymentAmount'], flagNum)
-            self.db.execute('UPDATE easylife_payment_order SET status = ?, resultcode = ?, updatetime = ? WHERE easylifeorderno = ?', (res.get('status'), res.get('resultCode'), info['easyLifeOrderNo'], DateUtil.getDate(format='%Y-%m-%d %H:%M:%S')))
+            self.db.execute('UPDATE easylife_payment_order SET status = ?, resultcode = ?, updatetime = ? WHERE easylifeorderno = ?', (res.get('status'), res.get('resultCode'), DateUtil.getDate(format='%Y-%m-%d %H:%M:%S'), info['easyLifeOrderNo']))
             self.conn.commit()
             logging.info(u'修改订单：%s状态为%s，剩余备付金：%s', info['easyLifeOrderNo'], res.get('status'), res.get('balance'))
 
