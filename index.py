@@ -338,16 +338,17 @@ if __name__ == '__main__':
     if not os.path.exists(path):
         os.mkdir(path)
     # 日志系统
-    filePath = "%s/%s.log" %(path, time.strftime("%Y-%m-%d",time.localtime()))
+    filePath = "%s/easylife" %(path)
     logging.basicConfig(level=logging.INFO,
                         format='%(asctime)s %(levelname)s: %(message)s',
-                        datefmt='%Y-%m-%d %H:%M:%S',
-                        filename=filePath,
-                        filemode='a')
-    console = logging.StreamHandler()
-    console.setLevel(logging.INFO)
-    console.setFormatter(logging.Formatter('%(asctime)s %(levelname)s: %(message)s', '%H:%M:%S'))
-    logging.getLogger('').addHandler(console)
+                        datefmt='%Y-%m-%d %H:%M:%S'
+                        )
+    import logging.handlers
+    filehandler = logging.handlers.TimedRotatingFileHandler(filePath, when='D', interval=1, backupCount=0)
+    filehandler.suffix = '%Y-%m-%d.log'
+    logger = logging.getLogger('')
+    logger.addHandler(filehandler)
+
     logging.info(u'-----------易生活mock系统启动-----------')
     # 初始化数据
     SQLite.init()
