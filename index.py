@@ -23,7 +23,8 @@ GLOBAL_ACCOUNT = [
      '1000002': {'userCode': '1000002', 'username': u'李嘉家', 'success': 'true', 'queryResultCode': '0000000','address': u'重庆市江北区999号', 'memo': '缴费失败', 'money': 20.00, 'status': 'FAIL', 'applyResultCode': '0000106'},
      '1000003': {'userCode': '1000002', 'username': u'李嘉家', 'success': 'true', 'queryResultCode': '0000000','address': u'重庆市江北区999号', 'memo': '缴费处理中', 'money': 10.90, 'status': 'HANGUP', 'applyResultCode': '0000107'},
      '1000004': {'userCode': '1000004', 'username': u'周博', 'success': 'true', 'queryResultCode': '0000121'},
-     '1000005': {'userCode': '1000005', 'username': u'郑中', 'success': 'true', 'queryResultCode': '0000000','address': u'重庆市江北区999号', 'memo': '缴费处理中', 'money': 10.90, 'status': 'HANGUP', 'applyResultCode': '0000107', 'isHangup': True}
+     '1000005': {'userCode': '1000005', 'username': u'郑中', 'success': 'true', 'queryResultCode': '0000000','address': u'重庆市江北区999号', 'memo': '缴费处理中', 'money': 10.90, 'status': 'HANGUP', 'applyResultCode': '0000107', 'isHangup': True},
+     '1000006': {'userCode': '1000006', 'username': u'阿訇', 'success': 'false', 'queryResultCode': '0000205'}
     },
     # 气费
     {'2000001': {'userCode': '2000001', 'username': u'么么', 'success': 'true', 'queryResultCode': '0000000','address': u'重庆市渝中区门店8号', 'memo': '缴费成功', 'money': 312.88, 'status': 'SUCCESS', 'applyResultCode': '0000000'},
@@ -218,6 +219,11 @@ class index:
             resultCode = '0000120'
         else:
             resultCode = resultInfo.get('queryResultCode')
+
+        # 如果查询失败，直接返回None
+        if resultCode != '0000000':
+            return None
+
         data = {
             'resultCode': resultCode,
             'orderNo': args.get('orderNo'),
