@@ -17,42 +17,6 @@ urls = (
     '/','index'
 )
 
-GLOBAL_ACCOUNT = [
-    # 水费
-    {'1000001': {'userCode': '1000001', 'username': u'东家', 'success': 'true', 'queryResultCode': '0000000','address': u'重庆市渝中区88号', 'memo': '缴费成功', 'money': 120.00, 'status': 'SUCCESS', 'applyResultCode': '0000000'},
-     '1000002': {'userCode': '1000002', 'username': u'李嘉家', 'success': 'true', 'queryResultCode': '0000000','address': u'重庆市江北区999号', 'memo': '缴费失败', 'money': 20.00, 'status': 'FAIL', 'applyResultCode': '0000106'},
-     '1000003': {'userCode': '1000002', 'username': u'李嘉家', 'success': 'true', 'queryResultCode': '0000000','address': u'重庆市江北区999号', 'memo': '缴费处理中', 'money': 10.90, 'status': 'HANGUP', 'applyResultCode': '0000107'},
-     '1000004': {'userCode': '1000004', 'username': u'周博', 'success': 'true', 'queryResultCode': '0000121'},
-     '1000005': {'userCode': '1000005', 'username': u'郑中', 'success': 'true', 'queryResultCode': '0000000','address': u'重庆市江北区999号', 'memo': '缴费处理中', 'money': 10.90, 'status': 'HANGUP', 'applyResultCode': '0000107', 'isHangup': True},
-     '1000006': {'userCode': '1000006', 'username': u'阿訇', 'success': 'false', 'queryResultCode': '0000205'}
-    },
-    # 气费
-    {'2000001': {'userCode': '2000001', 'username': u'么么', 'success': 'true', 'queryResultCode': '0000000','address': u'重庆市渝中区门店8号', 'memo': '缴费成功', 'money': 312.88, 'status': 'SUCCESS', 'applyResultCode': '0000000'},
-     '2000002': {'userCode': '2000002', 'username': u'刘尼', 'success': 'true', 'queryResultCode': '0000000','address': u'重庆市江北区洋河北路10号', 'memo': '缴费失败', 'money': 39.09, 'status': 'FAIL', 'applyResultCode': '0000106'},
-     '2000003': {'userCode': '2000003', 'username': u'哈格', 'success': 'true', 'queryResultCode': '0000000','address': u'重庆市九龙坡区12号', 'memo': '缴费处理中', 'money': 19.10, 'status': 'HANGUP', 'applyResultCode': '0000107'},
-     '2000004': {'userCode': '2000004', 'username': u'张尼', 'success': 'true', 'queryResultCode': '0000121'},
-     '2000005': {'userCode': '2000005', 'username': u'郑中', 'success': 'true', 'queryResultCode': '0000000','address': u'重庆市江北区999号', 'memo': '缴费处理中', 'money': 10.90, 'status': 'HANGUP', 'applyResultCode': '0000107', 'isHangup': True},
-     '2000006': {'userCode': '2000006', 'username': u'阿訇', 'success': 'false', 'queryResultCode': '0000205'}
-    },
-    # 电费
-    {'3000001': {'userCode': '3000001', 'username': u'占方式', 'success': 'true', 'queryResultCode': '0000000','address': u'重庆市渝中区11号', 'memo': '缴费成功', 'money': 81.20, 'status': 'SUCCESS', 'applyResultCode': '0000000'},
-     '3000002': {'userCode': '3000002', 'username': u'张三丰', 'success': 'true', 'queryResultCode': '0000000','address': u'重庆市江北区健康路121号', 'memo': '缴费失败', 'money': 9.02, 'status': 'FAIL', 'applyResultCode': '0000106'},
-     '3000003': {'userCode': '3000003', 'username': u'杨富', 'success': 'true', 'queryResultCode': '0000000','address': u'重庆市渝中区龙组路89号', 'memo': '缴费处理中', 'money': 190.90, 'status': 'HANGUP', 'applyResultCode': '0000107'},
-     '3000004': {'userCode': '3000004', 'username': u'王博', 'success': 'true', 'queryResultCode': '0000121'},
-     '3000005': {'userCode': '3000005', 'username': u'郑中', 'success': 'true', 'queryResultCode': '0000000','address': u'重庆市江北区999号', 'memo': '缴费处理中', 'money': 10.90, 'status': 'HANGUP', 'applyResultCode': '0000107', 'isHangup': True},
-     '3000006': {'userCode': '3000006', 'username': u'阿訇', 'success': 'false', 'queryResultCode': '0000205'}
-    },
-    # 手机充值
-    {
-        '18523125117': {'userCode': '18523125117', 'status': 'SUCCESS', 'applyResultCode': '0000000'},
-        '15123334382': {'userCode': '15123334382', 'status': 'FAIL', 'applyResultCode': '0000106'},
-        '13811111111': {'userCode': '13811111111', 'status': 'HANGUP', 'applyResultCode': '0000107', 'rechangeStatus': 'FAIL'},
-        '13822222222': {'userCode': '13822222222', 'status': 'HANGUP', 'applyResultCode': '0000107', 'rechangeStatus': 'SUCCESS'},
-        '13833333333': {'userCode': '13833333333', 'status': 'HANGUP', 'applyResultCode': '0000107', 'isHangup': True}
-    }
-]
-
-
 class index:
 
     def __init__(self):
@@ -93,16 +57,16 @@ class index:
         globals = {}
         if queryType == '000010':
             # 水费
-            globals = GLOBAL_ACCOUNT[0]
+            globals = Global.GLOBAL_ACCOUNT[0]
         elif queryType == '000020':
             # 气费
-            globals = GLOBAL_ACCOUNT[1]
+            globals = Global.GLOBAL_ACCOUNT[1]
         elif queryType == '000030':
             # 电费
-            globals = GLOBAL_ACCOUNT[2]
+            globals = Global.GLOBAL_ACCOUNT[2]
         elif queryType == '000040':
             # 手机充值
-            globals = GLOBAL_ACCOUNT[3]
+            globals = Global.GLOBAL_ACCOUNT[3]
 
         resultInfo = globals.get(args.get('userCode'))
         if resultInfo == None:
@@ -142,7 +106,12 @@ class index:
             orderStatus = 'PROCESSING'
             resultCode = '0000107'
 
-        self.db.execute('INSERT INTO easylife_payment_order(easylifeorderno, outbizno, status, paymenttype, usercode, resultcode, paymentamount, addtime, updatetime) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)', (easyLifeOrderNo, args.get('outBizNo'), orderStatus, queryType, args.get('userCode'), resultCode, float(args.get('paymentAmount')), DateUtil.getDate(format='%Y-%m-%d %H:%M:%S'), DateUtil.getDate(format='%Y-%m-%d %H:%M:%S')))
+        # 是否保持挂起状态 
+        if resultInfo.get('isHangup'):
+            iskeephangup = 1
+        else:
+            iskeephangup = 0
+        self.db.execute('INSERT INTO easylife_payment_order(easylifeorderno, outbizno, status, paymenttype, usercode, resultcode, paymentamount, iskeephangup, addtime, updatetime) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', (easyLifeOrderNo, args.get('outBizNo'), orderStatus, queryType, args.get('userCode'), resultCode, float(args.get('paymentAmount')), iskeephangup, DateUtil.getDate(format='%Y-%m-%d %H:%M:%S'), DateUtil.getDate(format='%Y-%m-%d %H:%M:%S')))
         self.conn.commit()
         result = {
             'success': 'T',
@@ -203,13 +172,13 @@ class index:
         globals = {}
         if queryType == '000010':
             # 水费
-            globals = GLOBAL_ACCOUNT[0]
+            globals = Global.GLOBAL_ACCOUNT[0]
         elif queryType == '000020':
             # 气费
-            globals = GLOBAL_ACCOUNT[1]
+            globals = Global.GLOBAL_ACCOUNT[1]
         elif queryType == '000030':
             # 电费
-            globals = GLOBAL_ACCOUNT[2]
+            globals = Global.GLOBAL_ACCOUNT[2]
         result = self.queryHandle(args, globals)
         logging.info(u'查询欠费返回：%s', str(result))
         return result
@@ -270,27 +239,24 @@ class CheckThread(threading.Thread):
             SQLite.close(self.conn)
 
     def execute(self):
-        self.db.execute('SELECT * FROM easylife_payment_order WHERE status=?', ('PROCESSING',))
+        self.db.execute('SELECT * FROM easylife_payment_order WHERE status=? AND iskeephangup=?', ('PROCESSING', 0))
         procs = self.db.fetchall()
         account = {}
         for info in procs:
             if info['paymentType'] == '000010':
                 #水费
-                globals = GLOBAL_ACCOUNT[0]
+                globals = Global.GLOBAL_ACCOUNT[0]
             elif info['paymentType'] == '000020':
                 # 气费
-                globals = GLOBAL_ACCOUNT[1]
+                globals = Global.GLOBAL_ACCOUNT[1]
             elif info['paymentType'] == '000030':
                 # 电费
-                globals = GLOBAL_ACCOUNT[2]
+                globals = Global.GLOBAL_ACCOUNT[2]
             elif info['paymentType'] == '000040':
                 # 手机充值
-                globals = GLOBAL_ACCOUNT[3]
+                globals = Global.GLOBAL_ACCOUNT[3]
 
             account = globals.get(info['userCode'])
-            if account.get('isHangup') == True:
-                logging.info(u'处理中，跳过')
-                continue
             flagNum = 0
             if account.get('rechangeStatus'):
                 if account.get('rechangeStatus') == 'SUCCESS':
@@ -354,17 +320,17 @@ if __name__ == '__main__':
     if not os.path.exists(path):
         os.mkdir(path)
     # 日志系统
-    filePath = "%s/%s.log" %(path, time.strftime("%Y-%m-%d",time.localtime()))
+    #filePath = "%s/%s.log" %(path, time.strftime("%Y-%m-%d",time.localtime()))
+    filePath = '%s/easylife' %path
 
-    logging.basicConfig(level=logging.INFO,
-                        format='%(asctime)s %(levelname)s: %(message)s',
-                        datefmt='%Y-%m-%d %H:%M:%S',
-                        filename=filePath,
-                        filemode='a')
-    console = logging.StreamHandler()
-    console.setLevel(logging.INFO)
-    console.setFormatter(logging.Formatter('%(asctime)s %(levelname)s: %(message)s', '%H:%M:%S'))
-    logging.getLogger('').addHandler(console)
+    logging.basicConfig(level=logging.INFO)
+
+    import logging.handlers
+    filehandler = logging.handlers.TimedRotatingFileHandler(filePath, when='d', interval=1, backupCount=0)
+    filehandler.suffix = '%Y-%m-%d.log'
+    filehandler.setFormatter(logging.Formatter('%(asctime)s %(levelname)s: %(message)s', '%Y-%m-%d %H:%M:%S'))
+
+    logging.getLogger('').addHandler(filehandler)
 
     logging.info(u'-----------易生活mock系统启动-----------')
     # 初始化数据
