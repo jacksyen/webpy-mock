@@ -22,8 +22,9 @@ GLOBAL_ACCOUNT = [
     {'1000001': {'userCode': '1000001', 'username': u'东家', 'success': 'true', 'queryResultCode': '0000000','address': u'重庆市渝中区88号', 'memo': '缴费成功', 'money': 120.00, 'status': 'SUCCESS', 'applyResultCode': '0000000'},
      '1000002': {'userCode': '1000002', 'username': u'李嘉家', 'success': 'true', 'queryResultCode': '0000000','address': u'重庆市江北区999号', 'memo': '缴费失败', 'money': 20.00, 'status': 'FAIL', 'applyResultCode': '0000106'},
      '1000003': {'userCode': '1000002', 'username': u'李嘉家', 'success': 'true', 'queryResultCode': '0000000','address': u'重庆市江北区999号', 'memo': '缴费处理中', 'money': 10.90, 'status': 'HANGUP', 'applyResultCode': '0000107'},
-     '1000004': {'userCode': '1000004', 'username': u'周博', 'success': 'true', 'queryResultCode': '0000121'}
-    },
+     '1000004': {'userCode': '1000004', 'username': u'周博', 'success': 'true', 'queryResultCode': '0000121'},
+     '1000005': {'userCode': '1000005', 'username': u'郑中', 'success': 'true', 'queryResultCode': '0000000','address': u'重庆市江北区999号', 'memo': '缴费处理中', 'money': 10.90, 'status': 'HANGUP', 'applyResultCode': '0000107', 'isHangup': True}
+    }
     # 气费
     {'2000001': {'userCode': '2000001', 'username': u'么么', 'success': 'true', 'queryResultCode': '0000000','address': u'重庆市渝中区门店8号', 'memo': '缴费成功', 'money': 312.88, 'status': 'SUCCESS', 'applyResultCode': '0000000'},
      '2000002': {'userCode': '2000002', 'username': u'刘尼', 'success': 'true', 'queryResultCode': '0000000','address': u'重庆市江北区洋河北路10号', 'memo': '缴费失败', 'money': 39.09, 'status': 'FAIL', 'applyResultCode': '0000106'},
@@ -176,8 +177,8 @@ class index:
             data['resultCode'] = requestinfo['resultCode']
             data['status'] = requestinfo['status']
         else:
-            data['resultCode'] = '0000100'
-            data['resultMessage'] = u"easyLifeOrderNo:订单号错误"
+            data['resultCode'] = '0000110'
+            data['resultMessage'] = u"数据未找到"
         sign = '%s= %s%s' %('data', json.dumps(data), Global.GLOBAL_MERCHANTS.get('lencee'))
         result = {
             'data': data,
@@ -274,7 +275,10 @@ class CheckThread(threading.Thread):
             elif info['paymentType'] == '000040':
                 # 手机充值
                 globals = GLOBAL_ACCOUNT[3]
-                account = globals.get(info['userCode'])
+
+            account = globals.get(info['userCode'])
+            if account.get('isHangup') == True:
+                continue
             flagNum = 0
             if account.get('rechangeStatus'):
                 if account.get('rechangeStatus') == 'SUCCESS':
