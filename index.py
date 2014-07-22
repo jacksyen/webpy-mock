@@ -30,20 +30,25 @@ GLOBAL_ACCOUNT = [
     {'2000001': {'userCode': '2000001', 'username': u'么么', 'success': 'true', 'queryResultCode': '0000000','address': u'重庆市渝中区门店8号', 'memo': '缴费成功', 'money': 312.88, 'status': 'SUCCESS', 'applyResultCode': '0000000'},
      '2000002': {'userCode': '2000002', 'username': u'刘尼', 'success': 'true', 'queryResultCode': '0000000','address': u'重庆市江北区洋河北路10号', 'memo': '缴费失败', 'money': 39.09, 'status': 'FAIL', 'applyResultCode': '0000106'},
      '2000003': {'userCode': '2000003', 'username': u'哈格', 'success': 'true', 'queryResultCode': '0000000','address': u'重庆市九龙坡区12号', 'memo': '缴费处理中', 'money': 19.10, 'status': 'HANGUP', 'applyResultCode': '0000107'},
-     '2000004': {'userCode': '2000004', 'username': u'张尼', 'success': 'true', 'queryResultCode': '0000121'}
+     '2000004': {'userCode': '2000004', 'username': u'张尼', 'success': 'true', 'queryResultCode': '0000121'},
+     '2000005': {'userCode': '2000005', 'username': u'郑中', 'success': 'true', 'queryResultCode': '0000000','address': u'重庆市江北区999号', 'memo': '缴费处理中', 'money': 10.90, 'status': 'HANGUP', 'applyResultCode': '0000107', 'isHangup': True},
+     '2000006': {'userCode': '2000006', 'username': u'阿訇', 'success': 'false', 'queryResultCode': '0000205'}
     },
     # 电费
     {'3000001': {'userCode': '3000001', 'username': u'占方式', 'success': 'true', 'queryResultCode': '0000000','address': u'重庆市渝中区11号', 'memo': '缴费成功', 'money': 81.20, 'status': 'SUCCESS', 'applyResultCode': '0000000'},
      '3000002': {'userCode': '3000002', 'username': u'张三丰', 'success': 'true', 'queryResultCode': '0000000','address': u'重庆市江北区健康路121号', 'memo': '缴费失败', 'money': 9.02, 'status': 'FAIL', 'applyResultCode': '0000106'},
      '3000003': {'userCode': '3000003', 'username': u'杨富', 'success': 'true', 'queryResultCode': '0000000','address': u'重庆市渝中区龙组路89号', 'memo': '缴费处理中', 'money': 190.90, 'status': 'HANGUP', 'applyResultCode': '0000107'},
-     '3000004': {'userCode': '3000004', 'username': u'王博', 'success': 'true', 'queryResultCode': '0000121'}
+     '3000004': {'userCode': '3000004', 'username': u'王博', 'success': 'true', 'queryResultCode': '0000121'},
+     '3000005': {'userCode': '3000005', 'username': u'郑中', 'success': 'true', 'queryResultCode': '0000000','address': u'重庆市江北区999号', 'memo': '缴费处理中', 'money': 10.90, 'status': 'HANGUP', 'applyResultCode': '0000107', 'isHangup': True},
+     '3000006': {'userCode': '3000006', 'username': u'阿訇', 'success': 'false', 'queryResultCode': '0000205'}
     },
     # 手机充值
     {
         '18523125117': {'userCode': '18523125117', 'status': 'SUCCESS', 'applyResultCode': '0000000'},
         '15123334382': {'userCode': '15123334382', 'status': 'FAIL', 'applyResultCode': '0000106'},
         '13811111111': {'userCode': '13811111111', 'status': 'HANGUP', 'applyResultCode': '0000107', 'rechangeStatus': 'FAIL'},
-        '13822222222': {'userCode': '13822222222', 'status': 'HANGUP', 'applyResultCode': '0000107', 'rechangeStatus': 'SUCCESS'}
+        '13822222222': {'userCode': '13822222222', 'status': 'HANGUP', 'applyResultCode': '0000107', 'rechangeStatus': 'SUCCESS'},
+        '13833333333': {'userCode': '13833333333', 'status': 'HANGUP', 'applyResultCode': '0000107', 'isHangup': True}
     }
 ]
 
@@ -284,6 +289,7 @@ class CheckThread(threading.Thread):
 
             account = globals.get(info['userCode'])
             if account.get('isHangup') == True:
+                logging.info(u'处理中，跳过')
                 continue
             flagNum = 0
             if account.get('rechangeStatus'):
@@ -348,16 +354,17 @@ if __name__ == '__main__':
     if not os.path.exists(path):
         os.mkdir(path)
     # 日志系统
-    filePath = "%s/easylife" %(path)
+    filePath = "%s/%s.log" %(path, time.strftime("%Y-%m-%d",time.localtime()))
+
     logging.basicConfig(level=logging.INFO,
                         format='%(asctime)s %(levelname)s: %(message)s',
-                        datefmt='%Y-%m-%d %H:%M:%S'
-                        )
-    import logging.handlers
-    filehandler = logging.handlers.TimedRotatingFileHandler(filePath, when='D', interval=1, backupCount=0)
-    filehandler.suffix = '%Y-%m-%d.log'
-    logger = logging.getLogger('')
-    logger.addHandler(filehandler)
+                        datefmt='%Y-%m-%d %H:%M:%S',
+                        filename=filePath,
+                        filemode='a')
+    console = logging.StreamHandler()
+    console.setLevel(logging.INFO)
+    console.setFormatter(logging.Formatter('%(asctime)s %(levelname)s: %(message)s', '%H:%M:%S'))
+    logging.getLogger('').addHandler(console)
 
     logging.info(u'-----------易生活mock系统启动-----------')
     # 初始化数据
