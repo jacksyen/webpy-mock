@@ -194,8 +194,8 @@ class index:
         else:
             resultCode = resultInfo.get('queryResultCode')
 
-        # 如果查询失败，直接返回None
-        if resultCode != '0000000':
+        # 如果查询结果等于0000205，直接return
+        if resultCode =='0000205':
             return None
 
         data = {
