@@ -1,0 +1,10 @@
+$def with(currentAmount)
+$var title: 增加商户预存款
+<div>
+  <div>当前金额：<span id='curAmount'>$(currentAmount)</span></div>
+  <div>增加金额：
+    <input id='addAmount' value='' style='width:200px' />
+    <button onclick='submit()'>提交</button>
+    <span id='errormsg'></span>
+</div>
+<script src='/static/js/rechange.js' type='text/javascript'></script>
