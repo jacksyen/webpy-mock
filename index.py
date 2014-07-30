@@ -14,8 +14,66 @@ from webglobal import Global
 from dbase import SQLite
 
 urls = (
-    '/','index'
+    '/','index',
+    '/rechange','rechange',
+    '/rechange/post', 'rechange_post'
 )
+class rechange:
+
+    def __init__(self):
+        self.render = web.template.render('templates', base='layout')
+        self.conn = SQLite.conn()
+        self.db = self.conn.cursor()
+
+    def __del(self):
+        if self.conn:
+            logging.info(u'销毁conn')
+            SQLite.close(self.conn)
+
+    def GET(self):
+        self.db.execute('select balance from %s where merchantkey = ?' %Global.GLOBAL_TABLE_BALANCE, (Global.GLOBAL_MERCHANTS.get('lencee'),))
+        querybalance = self.db.fetchone()
+        balance = querybalance['balance']
+        return self.render.rechange(balance)
+
+class rechange_post():
+
+    def __init__(self):
+        self.conn = SQLite.conn()
+        self.db = self.conn.cursor()
+
+    def __del(self):
+        if self.conn:
+            logging.info(u'销毁conn')
+            SQLite.close(self.conn)
+
+    def POST(self):
+        args = web.input()
+        logging.info(u'入参:%s', args)
+        amount = args.get('amount')
+        result = {}
+        if not amount or len(amount) == 0:
+            result['status'] = 'FAIL'
+            return
+        try:
+            addbalance = float(amount)
+            if addbalance <=0:
+                result['status'] = 'FAIL'
+                return
+            self.db.execute('SELECT balance FROM %s WHERE merchantkey = ? ORDER BY updatetime desc limit 1' %Global.GLOBAL_TABLE_BALANCE, (Global.GLOBAL_MERCHANTS.get('lencee'),))
+            querybalance = self.db.fetchone()
+            balance = querybalance['balance']
+            balance = float(format(balance + addbalance, '.2f'))
+            self.db.execute('UPDATE %s SET balance = ?, updatetime = ? WHERE merchantkey = ?' %Global.GLOBAL_TABLE_BALANCE, (balance, DateUtil.getDate(format='%Y-%m-%d %H:%M:%S'), Global.GLOBAL_MERCHANTS.get('lencee')))
+            self.conn.commit()
+            result['status'] = 'SUCCESS'
+            result['balance'] = balance
+        except Exception, err:
+            result['status'] = 'ABNORMAL'
+            logging.error(u'增加商户预存款异常：%s', err)
+        r = json.dumps(result)
+        logging.info(u'增加商户预存款返回:%s', r)
+        return r
 
 class index:
 
