@@ -25,7 +25,7 @@ class rechange:
         self.conn = SQLite.conn()
         self.db = self.conn.cursor()
 
-    def __del(self):
+    def __del__(self):
         if self.conn:
             logging.info(u'销毁conn')
             SQLite.close(self.conn)
@@ -42,7 +42,7 @@ class rechange_post():
         self.conn = SQLite.conn()
         self.db = self.conn.cursor()
 
-    def __del(self):
+    def __del__(self):
         if self.conn:
             logging.info(u'销毁conn')
             SQLite.close(self.conn)
@@ -81,7 +81,7 @@ class index:
         self.conn = SQLite.conn()
         self.db = self.conn.cursor()
 
-    def __del(self):
+    def __del__(self):
         if self.conn:
             logging.info(u'销毁conn')
             SQLite.close(self.conn)

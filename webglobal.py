@@ -16,7 +16,9 @@ class Global:
             # 一直挂起
             '1000005': {'userCode': '1000005', 'username': u'郑中', 'success': 'true', 'queryResultCode': '0000000','address': u'重庆市江北区999号', 'memo': '缴费处理中', 'money': 10.90, 'status': 'HANGUP', 'applyResultCode': '0000107', 'isHangup': True},
             # 异常
-            '1000006': {'userCode': '1000006', 'username': u'阿訇', 'success': 'false', 'queryResultCode': '0000205'}
+            '1000006': {'userCode': '1000006', 'username': u'阿訇', 'success': 'false', 'queryResultCode': '0000205'},
+            # 挂起随机转成功
+            '1000008': {'userCode': '1000008', 'username': u'李家', 'success': 'true', 'queryResultCode': '0000000','address': u'重庆市渝北区109号', 'memo': '缴费处理中', 'money': 101.01, 'status': 'HANGUP', 'applyResultCode': '0000107', 'rechangeStatus': 'SUCCESS'}
          },
         # 气费
         {
