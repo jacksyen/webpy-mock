@@ -10,7 +10,7 @@
 # Package-Requires: ()
 # Last-Updated:
 #           By:
-#     Update #: 18
+#     Update #: 19
 # URL:
 # Doc URL:
 # Keywords:
@@ -74,7 +74,7 @@ class Rechange:
         querybalance = self.db.fetchone()
         balance = querybalance['balance']
 
-        self.db.execute('SELECT usercode, paymentmoney FROM %s WHERE paymentstatus = "SUCCESS" and paymenttype != "000040" ORDER BY paymenttype' %Global.GLOBAL_TABLE_PAYMENT_USER)
+        self.db.execute('SELECT usercode, paymentmoney, paymenttype FROM %s WHERE paymentstatus = "SUCCESS" and paymenttype != "000040" ORDER BY paymenttype' %Global.GLOBAL_TABLE_PAYMENT_USER)
         infos = self.db.fetchall()
         return self.render.rechange(balance, infos)
 #

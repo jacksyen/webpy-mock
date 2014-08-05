@@ -10,6 +10,7 @@ $var title: 增加商户预存款
     <div class='tr high'>
       <div class='td'><span>缴费号码</span></div>
       <div class='td'>缴费金额</div>
+      <div class='td'>缴费类型</div>
       <div class='td long'>操作</div>
     </div>
     <div clear='both'></div>
@@ -17,21 +18,31 @@ $var title: 增加商户预存款
       <div class='tr'>
          <div class='td' usercode=$info['usercode']>$info['usercode']</div>
          <div class='td' amount>$info['paymentmoney']</div>
-         <div class='td left long'>
-           <button onclick='submit2(this)'>修改金额(+1.5 CNY)</button>
+         <div class='td'>
+	   $if info['paymenttype'] == '000010':
+	       水费
+	   $elif info['paymenttype'] == '000020':
+	       气费
+	   $elif info['paymenttype'] == '000030':
+	       电费
+	   $elif info['paymenttype'] == '000040':
+	       手机充值
+	 </div>
+         <div class='td long'>
+           <button onclick='submit2(this)'>修改金额</button>(+1.5 CNY)
          </div>
-         <div class='td'><span msg></span></div>
+         <div class='td msg'><span msg></span></div>
       </div>
       <div clear='both'></div>
    <div class='tr end'></div>
-   <div class='high red'>注：</div>
+   <div class='high red'>注：所有可以设置滞纳金的帐号，点击修改金额，在原始缴费金额上加1.5元成为滞纳金</div>
 </div>
 
 <p></p>
 <div class='tr end'></div>
-修改预存款：
+<div class='high red'>修改预存款：</div>
 <div>
-  <div>当前金额：<span id='curAmount'>$(currentAmount)</span></div>
+  <div>当前金额：<span id='curAmount'>$(currentAmount)</span>(CNY)</div>
   <div>增加金额：
     <input id='addAmount' value='' style='width:200px' />
     <button onclick='submit()'>提交</button>

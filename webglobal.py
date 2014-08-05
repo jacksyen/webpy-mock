@@ -1,5 +1,50 @@
 # -*- coding:utf-8 -*-
+# webglobal.py --- 
+# 
+# Filename: webglobal.py
+# Description: 
+# Author: jacksyen
+# Maintainer: 
+# Created: 二  8月  5 23:15:01 2014 (+0800)
+# Version: 
+# Package-Requires: ()
+# Last-Updated: 二  8月  5 23:16:13 2014 (+0800)
+#           By: jacksyen
+#     Update #: 5
+# URL: 
+# Doc URL: 
+# Keywords: 
+# Compatibility: 
+# 
+# 
 
+# Commentary: 
+# 
+# 
+# 
+# 
+
+# Change Log:
+# 更新缴费号码信息
+# 
+# 
+# 
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or (at
+# your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with GNU Emacs.  If not, see <http://www.gnu.org/licenses/>.
+# 
+# 
+
+# Code:
 class Global:
 
     GLOBAL_ACCOUNT = [
@@ -8,46 +53,48 @@ class Global:
         {'userCode': '1000001', 'userName': '东家', 'queryStatus': 'true', 'queryResultCode': '0000000', 'address': '重庆市渝中区88号', 'memo': '缴费成功', 'paymentMoney': 120.00, 'paymentStatus': 'SUCCESS', 'paymentResultCode': '0000000', 'paymentType': '000010'},
         # 直接失败
         {'userCode': '1000002', 'userName': '李嘉家', 'queryStatus': 'true', 'queryResultCode': '0000000', 'address': '重庆市江北区999号', 'memo': '缴费失败', 'paymentMoney': 20.00, 'paymentStatus': 'FAIL', 'paymentResultCode': '0000106', 'paymentType': '000010'},
-        # 挂起随机转成功or失败
-        {'userCode': '1000003', 'userName': '李嘉家', 'queryStatus': 'true', 'queryResultCode': '0000000','address': '重庆市江北区999号', 'memo': '缴费处理中', 'paymentMoney': 10.90, 'paymentStatus': 'HANGUP', 'paymentResultCode': '0000107', 'paymentType': '000010'},
-        # 没有欠费信息
-        {'userCode': '1000004', 'userName': '周博', 'queryStatus': 'true', 'queryResultCode': '0000121', 'paymentType': '000010'},
+        # 挂起转失败
+        {'userCode': '1000003', 'userName': '李嘉家', 'queryStatus': 'true', 'queryResultCode': '0000000','address': '重庆市江北区999号', 'memo': '缴费处理中', 'paymentMoney': 10.90, 'paymentStatus': 'HANGUP', 'paymentResultCode': '0000107', 'paymentType': '000010', 'rechangeStatus': 'FAIL'},
+        # 挂起转成功
+        {'userCode': '1000004', 'userName': '李家', 'queryStatus': 'true', 'queryResultCode': '0000000','address': '重庆市渝北区109号', 'memo': '缴费处理中', 'paymentMoney': 101.01, 'paymentStatus': 'HANGUP', 'paymentResultCode': '0000107', 'paymentType': '000010', 'rechangeStatus': 'SUCCESS'},
         # 一直挂起
         {'userCode': '1000005', 'userName': '郑中', 'queryStatus': 'true', 'queryResultCode': '0000000','address': '重庆市江北区999号', 'memo': '缴费处理中', 'paymentMoney': 10.90, 'paymentStatus': 'HANGUP', 'paymentResultCode': '0000107', 'isHangup': 1, 'paymentType': '000010'},
         # 异常
         {'userCode': '1000006', 'userName': '阿訇', 'queryStatus': 'false', 'queryResultCode': '0000205', 'paymentType': '000010'},
-        # 有滞纳金
-        #{'userCode': '1000007', 'userName': '周冬', 'queryStatus': 'true', 'queryResultCode': '0000000','address': '重庆市渝北区909号', 'memo': '缴费成功', 'queryOneMoney': 23.00, 'paymentMoney': 24.00, 'paymentStatus': 'FAIL', 'paymentResultCode': '0000129', 'paymentType': '000010'},
-        # 挂起转成功
-        {'userCode': '1000008', 'userName': '李家', 'queryStatus': 'true', 'queryResultCode': '0000000','address': '重庆市渝北区109号', 'memo': '缴费处理中', 'paymentMoney': 101.01, 'paymentStatus': 'HANGUP', 'paymentResultCode': '0000107', 'rechangeStatus': 'SUCCESS', 'paymentType': '000010'},
+        # 没有欠费信息
+        {'userCode': '1000008', 'userName': '周博', 'queryStatus': 'true', 'queryResultCode': '0000121', 'paymentType': '000010'},
 
         # 气费
         # 直接成功
         {'userCode': '2000001', 'userName': '么么', 'queryStatus': 'true', 'queryResultCode': '0000000','address': '重庆市渝中区门店8号', 'memo': '缴费成功', 'paymentMoney': 312.88, 'paymentStatus': 'SUCCESS', 'paymentResultCode': '0000000', 'paymentType': '000020'},
         # 直接失败
         {'userCode': '2000002', 'userName': '刘尼', 'queryStatus': 'true', 'queryResultCode': '0000000','address': '重庆市江北区洋河北路10号', 'memo': '缴费失败', 'paymentMoney': 39.09, 'paymentStatus': 'FAIL', 'paymentResultCode': '0000106', 'paymentType': '000020'},
-        # 挂起随机转成功or失败
-        {'userCode': '2000003', 'userName': '哈格', 'queryStatus': 'true', 'queryResultCode': '0000000','address': '重庆市九龙坡区12号', 'memo': '缴费处理中', 'paymentMoney': 19.10, 'paymentStatus': 'HANGUP', 'paymentResultCode': '0000107', 'paymentType': '000020'},
-        # 没有欠费信息
-        {'userCode': '2000004', 'userName': '张尼', 'queryStatus': 'true', 'queryResultCode': '0000121', 'paymentType': '000020'},
+        # 挂起转失败
+        {'userCode': '2000003', 'userName': '哈格', 'queryStatus': 'true', 'queryResultCode': '0000000','address': '重庆市九龙坡区12号', 'memo': '缴费处理中', 'paymentMoney': 19.10, 'paymentStatus': 'HANGUP', 'paymentResultCode': '0000107', 'paymentType': '000020', 'rechangeStatus': 'FAIL'},
+        # 挂起转成功
+        {'userCode': '2000004', 'userName': '哈格', 'queryStatus': 'true', 'queryResultCode': '0000000','address': '重庆市九龙坡区12号', 'memo': '缴费处理中', 'paymentMoney': 19.10, 'paymentStatus': 'HANGUP', 'paymentResultCode': '0000107', 'paymentType': '000020', 'rechangeStatus': 'SUCCESS'},
         # 一直挂起
         {'userCode': '2000005', 'userName': '郑中', 'queryStatus': 'true', 'queryResultCode': '0000000','address': '重庆市江北区999号', 'memo': '缴费处理中', 'paymentMoney': 10.90, 'paymentStatus': 'HANGUP', 'paymentResultCode': '0000107', 'isHangup': 1, 'paymentType': '000020'},
         # 异常
         {'userCode': '2000006', 'userName': '阿訇', 'queryStatus': 'false', 'queryResultCode': '0000205', 'paymentType': '000020'},
+        # 没有欠费信息
+        {'userCode': '2000008', 'userName': '张尼', 'queryStatus': 'true', 'queryResultCode': '0000121', 'paymentType': '000020'},
 
         # 电费
         # 直接成功
         {'userCode': '3000001', 'userName': '占方式', 'queryStatus': 'true', 'queryResultCode': '0000000','address': '重庆市渝中区11号', 'memo': '缴费成功', 'paymentMoney': 81.20, 'paymentStatus': 'SUCCESS', 'paymentResultCode': '0000000', 'paymentType': '000030'},
         # 直接失败
         {'userCode': '3000002', 'userName': '张三丰', 'queryStatus': 'true', 'queryResultCode': '0000000','address': '重庆市江北区健康路121号', 'memo': '缴费失败', 'paymentMoney': 9.02, 'paymentStatus': 'FAIL', 'paymentResultCode': '0000106', 'paymentType': '000030'},
-        # 挂起随机转成功or失败
-        {'userCode': '3000003', 'userName': '杨富', 'queryStatus': 'true', 'queryResultCode': '0000000','address': '重庆市渝中区龙组路89号', 'memo': '缴费处理中', 'paymentMoney': 190.90, 'paymentStatus': 'HANGUP', 'paymentResultCode': '0000107', 'paymentType': '000030'},
-        # 没有欠费信息
-        {'userCode': '3000004', 'userName': '王博', 'queryStatus': 'true', 'queryResultCode': '0000121', 'paymentType': '000030'},
+        # 挂起转失败
+        {'userCode': '3000003', 'userName': '杨富', 'queryStatus': 'true', 'queryResultCode': '0000000','address': '重庆市渝中区龙组路89号', 'memo': '缴费处理中', 'paymentMoney': 190.90, 'paymentStatus': 'HANGUP', 'paymentResultCode': '0000107', 'paymentType': '000030', 'rechangeStatus': 'FAIL'},
+        # 挂起转成功
+        {'userCode': '3000004', 'userName': '高建', 'queryStatus': 'true', 'queryResultCode': '0000000','address': '重庆市渝中区龙组路89号', 'memo': '缴费处理中', 'paymentMoney': 190.90, 'paymentStatus': 'HANGUP', 'paymentResultCode': '0000107', 'paymentType': '000030', 'rechangeStatus': 'SUCCESS'},
         # 一直挂起
         {'userCode': '3000005', 'userName': '郑中', 'queryStatus': 'true', 'queryResultCode': '0000000','address': '重庆市江北区999号', 'memo': '缴费处理中', 'paymentMoney': 10.90, 'paymentStatus': 'HANGUP', 'paymentResultCode': '0000107', 'isHangup': 1, 'paymentType': '000030'},
         # 异常
         {'userCode': '3000006', 'userName': '阿訇', 'queryStatus': 'false', 'queryResultCode': '0000205', 'paymentType': '000030'},
+        # 没有欠费信息
+        {'userCode': '3000008', 'userName': '王博', 'queryStatus': 'true', 'queryResultCode': '0000121', 'paymentType': '000030'},
 
         # 手机充值
         # 直接成功
@@ -118,3 +165,6 @@ class Global:
 
     def __init__(self):
         pass
+
+# 
+# webglobal.py ends here
