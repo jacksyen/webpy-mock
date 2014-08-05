@@ -1,5 +1,35 @@
-$def with(currentAmount)
+$def with(currentAmount, infos)
 $var title: 增加商户预存款
+
+<link rel="stylesheet" type="text/css" href="/static/css/rechange.css">
+ <script src='/static/js/rechange.js' type='text/javascript'></script>
+
+
+<div>
+  <div>
+    <div class='tr high'>
+      <div class='td'><span>缴费号码</span></div>
+      <div class='td'>缴费金额</div>
+      <div class='td long'>操作</div>
+    </div>
+    <div clear='both'></div>
+    $for info in infos:
+      <div class='tr'>
+         <div class='td' usercode=$info['usercode']>$info['usercode']</div>
+         <div class='td' amount>$info['paymentmoney']</div>
+         <div class='td left long'>
+           <button onclick='submit2(this)'>修改金额(+1.5 CNY)</button>
+         </div>
+         <div class='td'><span msg></span></div>
+      </div>
+      <div clear='both'></div>
+   <div class='tr end'></div>
+   <div class='high red'>注：</div>
+</div>
+
+<p></p>
+<div class='tr end'></div>
+修改预存款：
 <div>
   <div>当前金额：<span id='curAmount'>$(currentAmount)</span></div>
   <div>增加金额：
@@ -7,4 +37,3 @@ $var title: 增加商户预存款
     <button onclick='submit()'>提交</button>
     <span id='errormsg'></span>
 </div>
-<script src='/static/js/rechange.js' type='text/javascript'></script>

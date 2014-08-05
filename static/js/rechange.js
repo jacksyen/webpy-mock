@@ -22,5 +22,32 @@ function submit(){
       $('#addAmount').val('');
       $('#errormsg').html('');
     }
-  })
+  });
+}
+
+function submit2(t){
+  var ele = $(t.parentElement.parentElement);
+  var usercode = ele.find('[usercode]').attr('usercode');
+  if(usercode == undefined || usercode == ''){
+    ele.find('[msg]').html('缴费号码不能为空');
+    return;
+  }
+  ele.find('[msg]').html('处理中，请稍候...');
+  $.ajax({
+    url: '/rechange/change',
+    type: 'POST',
+    data: {'usercode': usercode},
+    dataType: 'json',
+    success: function (result){
+      var msg = '';
+      msg = result.msg;
+      if(result.status == 'SUCCESS'){
+        ele.find('[amount]').html(result.balance);
+      }
+      ele.find('[msg]').html(msg);
+      ele.find('[msg]').fadeTo(5000, 0.50, function (){
+        ele.find('[msg]').html('');
+      });
+    }
+  });
 }
