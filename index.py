@@ -21,7 +21,7 @@ urls = (
     '/','index',
     '/rechange','Rechange',
     '/rechange/post', 'RechangePost',
-    '/rechange/change', 'AddBranch'
+    '/rechange/change', 'AddBreach'
 )
 
 class index:

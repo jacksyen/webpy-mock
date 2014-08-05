@@ -10,7 +10,7 @@
 # Package-Requires: ()
 # Last-Updated:
 #           By:
-#     Update #: 3
+#     Update #: 10
 # URL:
 # Doc URL:
 # Keywords:
@@ -43,6 +43,12 @@
 # along with GNU Emacs.  If not, see <http://www.gnu.org/licenses/>.
 #
 #
+import web
+import json
+from log import logger
+from util import DateUtil
+from webglobal import Global
+from dbase import SQLite
 
 # Code:
 class AddBreach:
@@ -61,15 +67,23 @@ class AddBreach:
         userCode = args.get('usercode')
         self.db.execute('SELECT * FROM %s WHERE usercode =?' %Global.GLOBAL_TABLE_PAYMENT_USER, (userCode,))
         info = self.db.fetchone()
-        if not info:
-            pass
-        amount = info['paymentmoney']
-        balance = float(format(amount + 1.50, '.2f'))
-        self.db.execute('UPDATE %s SET paymentmoney = ?, breach = ?, updatetime = ? WHERE usercode = ?' %Global.GLOBAL_TABLE_PAYMENT_USER, (balance, '1.50', DateUtil.getDate(format='%Y-%m-%d %H:%M:%S'), userCode))
-        self.conn.commit()
         result = {}
-        result['status'] = 'SUCCESS'
-        result['balance'] = balance
+        if not info:
+            result['msg'] = u'缴费用户信息未找到'
+            r = json.dumps(result)
+            logger.log().info(u'修改金额返回:%s', r)
+            return r
+        try:
+            amount = info['paymentmoney']
+            balance = float(format(amount + 1.50, '.2f'))
+            self.db.execute('UPDATE %s SET paymentmoney = ?, breach = ?, updatetime = ? WHERE usercode = ?' %Global.GLOBAL_TABLE_PAYMENT_USER, (balance, '1.50', DateUtil.getDate(format='%Y-%m-%d %H:%M:%S'), userCode))
+            self.conn.commit()
+            result['status'] = 'SUCCESS'
+            result['balance'] = balance
+            result['msg'] = '修改成功'
+        except Exception, e:
+            logger.log().error(u'增加滞纳金失败')
+            result['msg'] = u'修改失败'
         r = json.dumps(result)
         logger.log().info(u'修改金额返回:%s', r)
         return r
