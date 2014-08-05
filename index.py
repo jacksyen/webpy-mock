@@ -1,60 +1,28 @@
 # -*- coding:utf-8 -*-
 
-import os
 import web
 import json
 import threading
-import time
-import random
+
 from log import logger
-from util import RandomUtil
-from util import MD5Util
-from util import DateUtil
 from webglobal import Global
 from dbase import SQLite
+
 from querybill import QueryBill
 from applybill import ApplyBill
 from querystatus import QueryStatus
 from rechange import Rechange
 from rechangepost import RechangePost
 from checkthread import CheckThread
+from addbreach import AddBreach
+
 
 urls = (
     '/','index',
     '/rechange','Rechange',
     '/rechange/post', 'RechangePost',
-    '/rechange/change', 'change'
-    
+    '/rechange/change', 'AddBranch'
 )
-
-class change:
-
-    def __init__(self):
-        self.conn = SQLite.conn()
-        self.db = self.conn.cursor()
-
-    def __del__(self):
-        if self.conn:
-            SQLite.close(self.conn)
-
-    def POST(self):
-        args = web.input()
-        logger.log().info(u'入参:%s', args)
-        userCode = args.get('usercode')
-        self.db.execute('SELECT * FROM %s WHERE usercode =?' %Global.GLOBAL_TABLE_PAYMENT_USER, (userCode,))
-        info = self.db.fetchone()
-        if not info:
-            pass
-        amount = info['paymentmoney']
-        balance = float(format(amount + 1.50, '.2f'))
-        self.db.execute('UPDATE %s SET paymentmoney = ?, updatetime = ? WHERE usercode = ?' %Global.GLOBAL_TABLE_PAYMENT_USER, (balance, DateUtil.getDate(format='%Y-%m-%d %H:%M:%S'), userCode))
-        self.conn.commit()
-        result = {}
-        result['status'] = 'SUCCESS'
-        result['balance'] = balance
-        r = json.dumps(result)
-        logger.log().info(u'修改金额返回:%s', r)
-        return r
 
 class index:
 

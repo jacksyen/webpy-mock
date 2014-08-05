@@ -10,7 +10,7 @@
 # Package-Requires: ()
 # Last-Updated:
 #           By:
-#     Update #: 31
+#     Update #: 32
 # URL:
 # Doc URL:
 # Keywords:
@@ -92,7 +92,7 @@ class QueryBill:
                 'address': globals['address'],
                 'agencyCode': args.get('agencyCode'),
                 'extendInfo': {},
-                'items': [{'channelCode': RandomUtil.random9Str(), 'charge': '0.00', 'month': DateUtil.getDate(), 'payables': globals['paymentmoney'], 'type': args.get('queryType')}],
+                'items': [{'channelCode': RandomUtil.random9Str(), 'charge': globals['breach'], 'month': DateUtil.getDate(), 'payables': globals['paymentmoney'], 'type': args.get('queryType')}],
                 'success': globals['querystatus'],
                 'userCode': globals['usercode'],
                 'username': globals['username']
