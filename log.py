@@ -22,7 +22,7 @@ class logger():
         filePath = '%s/easylife' %path
 
         logging.basicConfig(level=logging.INFO)
-        filehandler = logging.handlers.TimedRotatingFileHandler(filePath, when='d', interval=1, backupCount=0)
+        filehandler = logging.handlers.TimedRotatingFileHandler(filePath, when='midnight', interval=1, backupCount=0)
         filehandler.suffix = '%Y-%m-%d.log'
         filehandler.setFormatter(logging.Formatter('%(asctime)s %(levelname)s: %(message)s', '%Y-%m-%d %H:%M:%S'))
         logging.getLogger('').addHandler(filehandler)
