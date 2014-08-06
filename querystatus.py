@@ -10,7 +10,7 @@
 # Package-Requires: ()
 # Last-Updated:
 #           By:
-#     Update #: 5
+#     Update #: 8
 # URL:
 # Doc URL:
 # Keywords:
@@ -43,13 +43,10 @@
 # along with GNU Emacs.  If not, see <http://www.gnu.org/licenses/>.
 #
 #
-import os
-import web
+
+
 import json
-import threading
-import time
-import random
-from log import logger
+
 from util import RandomUtil
 from util import MD5Util
 from util import DateUtil
@@ -91,7 +88,6 @@ class QueryStatus:
             'sign': MD5Util.md5(sign)
         }
         r = json.dumps(result)
-        logger.log().info(u'查询缴费状态返回:%s', r)
         return r
 
 #

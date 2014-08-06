@@ -10,7 +10,7 @@
 # Package-Requires: ()
 # Last-Updated:
 #           By:
-#     Update #: 32
+#     Update #: 33
 # URL:
 # Doc URL:
 # Keywords:
@@ -49,7 +49,7 @@ import json
 import threading
 import time
 import random
-from log import logger
+
 from util import RandomUtil
 from util import MD5Util
 from util import DateUtil

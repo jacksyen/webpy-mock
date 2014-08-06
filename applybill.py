@@ -10,7 +10,7 @@
 # Package-Requires: ()
 # Last-Updated:
 #           By:
-#     Update #: 36
+#     Update #: 37
 # URL:
 # Doc URL:
 # Keywords:
@@ -44,7 +44,6 @@
 #
 #
 
-from log import logger
 from util import RandomUtil
 from util import MD5Util
 from util import DateUtil
