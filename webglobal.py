@@ -8,9 +8,9 @@
 # Created: 二  8月  5 23:15:01 2014 (+0800)
 # Version: 
 # Package-Requires: ()
-# Last-Updated: 二  8月  5 23:16:13 2014 (+0800)
-#           By: jacksyen
-#     Update #: 5
+# Last-Updated: 周三 八月  6 09:54:53 2014 (+0800)
+#           By: Administrator
+#     Update #: 11
 # URL: 
 # Doc URL: 
 # Keywords: 
@@ -98,15 +98,15 @@ class Global:
 
         # 手机充值
         # 直接成功
-        {'userCode': '18523125117', 'paymentStatus': 'SUCCESS', 'paymentResultCode': '0000000', 'paymentType': '000040'},
+        {'userCode': '13983479195', 'paymentStatus': 'SUCCESS', 'paymentResultCode': '0000000', 'paymentType': '000040'},
         # 直接失败
-        {'userCode': '15123334382', 'paymentStatus': 'FAIL', 'paymentResultCode': '0000106', 'paymentType': '000040'},
+        {'userCode': '18580238256', 'paymentStatus': 'FAIL', 'paymentResultCode': '0000106', 'paymentType': '000040'},
         # 挂起转失败
-        {'userCode': '13811111111', 'paymentStatus': 'HANGUP', 'paymentResultCode': '0000107', 'rechangeStatus': 'FAIL', 'paymentType': '000040'},
+        {'userCode': '18523380869', 'paymentStatus': 'HANGUP', 'paymentResultCode': '0000107', 'rechangeStatus': 'FAIL', 'paymentType': '000040'},
         # 挂起转成功
-        {'userCode': '13822222222', 'paymentStatus': 'HANGUP', 'paymentResultCode': '0000107', 'rechangeStatus': 'SUCCESS', 'paymentType': '000040'},
+        {'userCode': '13164449448', 'paymentStatus': 'HANGUP', 'paymentResultCode': '0000107', 'rechangeStatus': 'SUCCESS', 'paymentType': '000040'},
         # 一直挂起
-        {'userCode': '13833333333', 'paymentStatus': 'HANGUP', 'paymentResultCode': '0000107', 'isHangup': 1, 'paymentType': '000040'}
+        {'userCode': '15102355288', 'paymentStatus': 'HANGUP', 'paymentResultCode': '0000107', 'isHangup': 1, 'paymentType': '000040'}
     ]
 
     # 商户key
