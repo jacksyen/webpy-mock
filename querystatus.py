@@ -10,7 +10,7 @@
 # Package-Requires: ()
 # Last-Updated:
 #           By:
-#     Update #: 8
+#     Update #: 14
 # URL:
 # Doc URL:
 # Keywords:
@@ -47,6 +47,7 @@
 
 import json
 
+from log import logger
 from util import RandomUtil
 from util import MD5Util
 from util import DateUtil
@@ -87,8 +88,7 @@ class QueryStatus:
             'data': data,
             'sign': MD5Util.md5(sign)
         }
-        r = json.dumps(result)
-        return r
+        return result
 
 #
 # querystatus.py ends here
