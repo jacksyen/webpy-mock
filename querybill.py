@@ -10,7 +10,7 @@
 # Package-Requires: ()
 # Last-Updated:
 #           By:
-#     Update #: 37
+#     Update #: 39
 # URL:
 # Doc URL:
 # Keywords:
@@ -88,12 +88,11 @@ class QueryBill:
             'success': 'T'
         }
         if resultCode == '0000000':
-            payables = float(format(globals['paymentmoney'] - float(globals['breach']), '.2f'))
             info = {
                 'address': globals['address'],
                 'agencyCode': args.get('agencyCode'),
                 'extendInfo': {},
-                'items': [{'channelCode': RandomUtil.random9Str(), 'charge': globals['breach'], 'month': DateUtil.getDate(), 'payables': payables, 'type': args.get('queryType')}],
+                'items': [{'channelCode': RandomUtil.random9Str(), 'charge': globals['breach'], 'month': DateUtil.getDate(), 'payables': globals['paymentmoney'], 'type': args.get('queryType')}],
                 'success': globals['querystatus'],
                 'userCode': globals['usercode'],
                 'username': globals['username']
