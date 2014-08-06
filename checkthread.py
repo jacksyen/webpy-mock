@@ -10,7 +10,7 @@
 # Package-Requires: ()
 # Last-Updated:
 #           By:
-#     Update #: 10
+#     Update #: 16
 # URL:
 # Doc URL:
 # Keywords:
@@ -60,13 +60,13 @@ from dbase import SQLite
 class CheckThread(threading.Thread):
 
     def __init__(self):
-        logger.log().info(u'线程启动')
+        logger.info(u'线程启动')
         self.conn = SQLite.conn()
         self.db = self.conn.cursor()
 
     def __del__(self):
         if self.conn:
-            logger.log().info(u'销毁conn')
+            logger.info(u'销毁conn')
             SQLite.close(self.conn)
 
     def execute(self):
@@ -85,7 +85,7 @@ class CheckThread(threading.Thread):
             res = self.getresult(info['paymentAmount'], flagNum)
             self.db.execute('UPDATE easylife_payment_order SET status = ?, resultcode = ?, updatetime = ? WHERE easylifeorderno = ?', (res.get('status'), res.get('resultCode'), DateUtil.getDate(format='%Y-%m-%d %H:%M:%S'), info['easyLifeOrderNo']))
             self.conn.commit()
-            logger.log().info(u'修改订单：%s状态为%s，剩余备付金：%s', info['easyLifeOrderNo'], res.get('status'), res.get('balance'))
+            logger.info(u'修改订单：%s状态为%s，剩余备付金：%s' %(info['easyLifeOrderNo'], res.get('status'), res.get('balance')))
 
     def run(self):
         while True:
@@ -94,10 +94,10 @@ class CheckThread(threading.Thread):
                 #10秒后重新检测
                 time.sleep(10)
             except KeyboardInterrupt:
-                logger.log().error(u'用户打断')
+                logger.error(u'用户打断')
                 exit(-1)
             except Exception, err:
-                logger.log().error(u'定时修改状态出现异常:%s.', err)
+                logger.error(u'定时修改状态出现异常:%s' %err)
                 exit(-1)
 
 

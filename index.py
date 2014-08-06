@@ -42,7 +42,7 @@ class index:
 
     def execute(self):
         args = web.input()
-        logger.log().info(u'入参:%s', args)
+        logger.info(u'入参:%s' %args)
         service = args.get('service')
         result = {}
         if service == 'queryBillPayableAmountV2':
@@ -57,7 +57,7 @@ class index:
             # 查询状态
             status = QueryStatus()
             result = status.queryStatus(args)
-        logger.log().info(u'出参：%s', str(result))
+        logger.info(u'出参：%s' %str(result))
         return json.dumps(result)
 
 
@@ -70,7 +70,7 @@ def func2():
     check.run()
 
 if __name__ == '__main__':
-    logger.log().info(u'-----------易生活mock系统启动-----------')
+    logger.info(u'-----------易生活mock系统启动-----------')
     # 初始化数据
     SQLite.init()
     app1 = threading.Thread(target=func)

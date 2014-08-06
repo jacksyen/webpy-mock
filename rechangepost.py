@@ -10,7 +10,7 @@
 # Package-Requires: ()
 # Last-Updated:
 #           By:
-#     Update #: 10
+#     Update #: 14
 # URL:
 # Doc URL:
 # Keywords:
@@ -65,12 +65,12 @@ class RechangePost:
 
     def __del__(self):
         if self.conn:
-            logger.log().info(u'销毁conn')
+            logger.info(u'销毁conn')
             SQLite.close(self.conn)
 
     def POST(self):
         args = web.input()
-        logger.log().info(u'入参:%s', args)
+        logger.info(u'入参:%s' %args)
         amount = args.get('amount')
         result = {}
         if not amount or len(amount) == 0:
@@ -91,9 +91,9 @@ class RechangePost:
             result['balance'] = balance
         except Exception, err:
             result['status'] = 'ABNORMAL'
-            logger.log().error(u'增加商户预存款异常：%s', err)
+            logger.error(u'增加商户预存款异常：%s' %err)
         r = json.dumps(result)
-        logger.log().info(u'增加商户预存款返回:%s', r)
+        logger.info(u'增加商户预存款返回:%s' %r)
         return r
 
 #

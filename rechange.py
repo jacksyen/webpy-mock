@@ -10,7 +10,7 @@
 # Package-Requires: ()
 # Last-Updated:
 #           By:
-#     Update #: 19
+#     Update #: 20
 # URL:
 # Doc URL:
 # Keywords:
@@ -66,7 +66,7 @@ class Rechange:
 
     def __del__(self):
         if self.conn:
-            logger.log().info(u'销毁conn')
+            logger.info(u'销毁conn')
             SQLite.close(self.conn)
 
     def GET(self):

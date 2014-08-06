@@ -10,7 +10,7 @@
 # Package-Requires: ()
 # Last-Updated:
 #           By:
-#     Update #: 10
+#     Update #: 15
 # URL:
 # Doc URL:
 # Keywords:
@@ -63,7 +63,7 @@ class AddBreach:
 
     def POST(self):
         args = web.input()
-        logger.log().info(u'入参:%s', args)
+        logger.info(u'入参:%s' %args)
         userCode = args.get('usercode')
         self.db.execute('SELECT * FROM %s WHERE usercode =?' %Global.GLOBAL_TABLE_PAYMENT_USER, (userCode,))
         info = self.db.fetchone()
@@ -71,7 +71,7 @@ class AddBreach:
         if not info:
             result['msg'] = u'缴费用户信息未找到'
             r = json.dumps(result)
-            logger.log().info(u'修改金额返回:%s', r)
+            logger.info(u'修改金额返回:%s' %r)
             return r
         try:
             amount = info['paymentmoney']
@@ -82,10 +82,10 @@ class AddBreach:
             result['balance'] = balance
             result['msg'] = '修改成功'
         except Exception, e:
-            logger.log().error(u'增加滞纳金失败')
+            logger.error(u'增加滞纳金失败')
             result['msg'] = u'修改失败'
         r = json.dumps(result)
-        logger.log().info(u'修改金额返回:%s', r)
+        logger.info(u'修改金额返回:%s' %r)
         return r
 #
 # addbreach.py ends here
