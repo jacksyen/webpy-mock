@@ -15,13 +15,14 @@ from rechange import Rechange
 from rechangepost import RechangePost
 from checkthread import CheckThread
 from addbreach import AddBreach
-
+from clearbreach import ClearBreach
 
 urls = (
     '/','index',
     '/rechange','Rechange',
     '/rechange/post', 'RechangePost',
-    '/rechange/change', 'AddBreach'
+    '/rechange/change', 'AddBreach',
+    '/rechange/clear', 'ClearBreach'
 )
 
 class index:

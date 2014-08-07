@@ -11,6 +11,7 @@ $var title: 增加商户预存款
       <div class='td'><span>缴费号码</span></div>
       <div class='td'>缴费金额</div>
       <div class='td'>缴费类型</div>
+      <div class='td'>当前滞纳金</div>
       <div class='td long'>操作</div>
     </div>
     <div clear='both'></div>
@@ -28,8 +29,11 @@ $var title: 增加商户预存款
 	   $elif info['paymenttype'] == '000040':
 	       手机充值
 	 </div>
+         <div class='td' breach>$info['breach']</div>
          <div class='td long'>
            <button onclick='submit2(this)'>修改金额</button>(+1.5 CNY)
+           &nbsp;&nbsp;
+           <button onclick='clearBreach(this)'>清空滞纳金</button>
          </div>
          <div class='td msg'><span msg></span></div>
       </div>

@@ -10,7 +10,7 @@
 # Package-Requires: ()
 # Last-Updated:
 #           By:
-#     Update #: 15
+#     Update #: 19
 # URL:
 # Doc URL:
 # Keywords:
@@ -76,10 +76,12 @@ class AddBreach:
         try:
             amount = info['paymentmoney']
             balance = float(format(amount + 1.50, '.2f'))
-            self.db.execute('UPDATE %s SET paymentmoney = ?, breach = ?, updatetime = ? WHERE usercode = ?' %Global.GLOBAL_TABLE_PAYMENT_USER, (balance, '1.50', DateUtil.getDate(format='%Y-%m-%d %H:%M:%S'), userCode))
+            breach = str(format(float(info['breach']) + 1.5, '.2f'))
+            self.db.execute('UPDATE %s SET paymentmoney = ?, breach = ?, updatetime = ? WHERE usercode = ?' %Global.GLOBAL_TABLE_PAYMENT_USER, (balance, breach, DateUtil.getDate(format='%Y-%m-%d %H:%M:%S'), userCode))
             self.conn.commit()
             result['status'] = 'SUCCESS'
             result['balance'] = balance
+            result['breach'] = breach
             result['msg'] = '修改成功'
         except Exception, e:
             logger.error(u'增加滞纳金失败')
