@@ -10,7 +10,7 @@
 # Package-Requires: ()
 # Last-Updated:
 #           By:
-#     Update #: 39
+#     Update #: 42
 # URL:
 # Doc URL:
 # Keywords:
@@ -74,7 +74,10 @@ class QueryBill:
         self.db.execute('SELECT * FROM %s WHERE usercode = ?' %Global.GLOBAL_TABLE_PAYMENT_USER, (args.get('userCode'), ))
         globals = self.db.fetchone()
         if globals == None:
-            resultCode = '0000120'
+            if args.get('queryType') == '000030':
+                resultCode = '0000204'
+            else:
+                resultCode = '0000120'
         else:
             resultCode = globals['queryresultcode']
         # 如果查询结果等于0000205，直接return
