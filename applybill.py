@@ -10,7 +10,7 @@
 # Package-Requires: ()
 # Last-Updated:
 #           By:
-#     Update #: 42
+#     Update #: 57
 # URL:
 # Doc URL:
 # Keywords:
@@ -43,6 +43,7 @@
 # along with GNU Emacs.  If not, see <http://www.gnu.org/licenses/>.
 #
 #
+import json
 
 from util import RandomUtil
 from util import MD5Util
@@ -86,6 +87,7 @@ class ApplyBill:
                 'price': resultInfo['price']
             }
         ]
+
         easyLifeOrderNo = RandomUtil.random32Str()
         self.db.execute('SELECT balance FROM %s WHERE merchantkey = ? ORDER BY updatetime desc limit 1' %Global.GLOBAL_TABLE_BALANCE, (Global.GLOBAL_MERCHANTS.get('lencee'),))
         querybalance = self.db.fetchone()
@@ -124,13 +126,14 @@ class ApplyBill:
             'channelId': RandomUtil.random6Str(),
             'balance': balance,
             'resultCode': resultInfo['paymentresultcode'],
-            'paymentResultInfos': '%s' %paymentResultInfos
+            'paymentResultInfos': '%s' %json.dumps(paymentResultInfos, ensure_ascii=False)
         }
         from operator import itemgetter
         import urllib
         sortList = sorted(result.iteritems(), key=lambda d:d[0])
         sign = '&'.join(['%s=%s' %(k,v) for k,v in sortList])
         sign += Global.GLOBAL_MERCHANTS.get('lencee')
+        print 'sign:%s' %sign
         result['sign'] = MD5Util.md5(sign)
         return result
 #

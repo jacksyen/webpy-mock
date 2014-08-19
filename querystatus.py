@@ -10,7 +10,7 @@
 # Package-Requires: ()
 # Last-Updated:
 #           By:
-#     Update #: 26
+#     Update #: 28
 # URL:
 # Doc URL:
 # Keywords:
@@ -90,7 +90,7 @@ class QueryStatus:
                 data['resultMessage'] = u"数据未找到"
         except Exception, e:
             logger.error(e)
-        sign = '%s= %s%s' %('data', json.dumps(data), Global.GLOBAL_MERCHANTS.get('lencee'))
+        sign = '%s= %s%s' %('data', json.dumps(data, ensure_ascii=False), Global.GLOBAL_MERCHANTS.get('lencee'))
         result = {
             'data': data,
             'sign': MD5Util.md5(sign)

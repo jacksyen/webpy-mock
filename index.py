@@ -59,7 +59,7 @@ class index:
             status = QueryStatus()
             result = status.queryStatus(args)
         logger.info(u'出参：%s' %str(result))
-        return json.dumps(result)
+        return json.dumps(result, ensure_ascii=False)
 
 
 def func():
