@@ -10,7 +10,7 @@
 # Package-Requires: ()
 # Last-Updated:
 #           By:
-#     Update #: 57
+#     Update #: 58
 # URL:
 # Doc URL:
 # Keywords:
@@ -133,7 +133,6 @@ class ApplyBill:
         sortList = sorted(result.iteritems(), key=lambda d:d[0])
         sign = '&'.join(['%s=%s' %(k,v) for k,v in sortList])
         sign += Global.GLOBAL_MERCHANTS.get('lencee')
-        print 'sign:%s' %sign
         result['sign'] = MD5Util.md5(sign)
         return result
 #

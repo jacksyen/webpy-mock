@@ -10,7 +10,7 @@
 # Package-Requires: ()
 # Last-Updated:
 #           By:
-#     Update #: 45
+#     Update #: 46
 # URL:
 # Doc URL:
 # Keywords:
@@ -105,7 +105,6 @@ class QueryBill:
         else:
             data['resultMessage'] = Global.GLOBAL_RESP_CODE.get(resultCode)
         sign = '%s= %s%s' %('data', json.dumps(data, ensure_ascii=False), Global.GLOBAL_MERCHANTS.get('lencee'))
-        print 'sign:%s' %sign
         result = {
             'data': data,
             'sign': MD5Util.md5(sign)
