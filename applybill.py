@@ -10,7 +10,7 @@
 # Package-Requires: ()
 # Last-Updated:
 #           By:
-#     Update #: 37
+#     Update #: 42
 # URL:
 # Doc URL:
 # Keywords:
@@ -79,7 +79,11 @@ class ApplyBill:
                 'money': resultInfo['paymentmoney'],
                 'status': resultInfo['querystatus'],
                 'type': resultInfo['paymentType'],
-                'userCode': args.get('userCode')
+                'userCode': args.get('userCode'),
+                'address': resultInfo['address'],
+                'username': resultInfo['username'],
+                'count': resultInfo['count'],
+                'price': resultInfo['price']
             }
         ]
         easyLifeOrderNo = RandomUtil.random32Str()

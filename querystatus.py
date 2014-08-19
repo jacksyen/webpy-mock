@@ -10,7 +10,7 @@
 # Package-Requires: ()
 # Last-Updated:
 #           By:
-#     Update #: 14
+#     Update #: 22
 # URL:
 # Doc URL:
 # Keywords:
@@ -75,11 +75,15 @@ class QueryStatus:
             'success': 'T',
             'signType': 'MD5',
             'channelId': RandomUtil.random6Str(),
-            'orderNo': args.get('orderNo')
+            'orderNo': args.get('orderNo'),
+            'info': []
         }
         if requestinfo:
-            data['resultCode'] = requestinfo['resultCode']
+            self.db.execute('SELECT * FROM %s WHERE usercode = ?' %Global.GLOBAL_TABLE_PAYMENT_USER, (requestinfo['usercode']))
+            userinfo = self.db.fetchone()
+            data['resultCode'] = requestinfo['resultcode']
             data['status'] = requestinfo['status']
+            data['info'] = [{'startCount': 200, 'endCount': userinfo['count'] + 200}]
         else:
             data['resultCode'] = '0000110'
             data['resultMessage'] = u"数据未找到"
