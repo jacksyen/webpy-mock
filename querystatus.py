@@ -10,7 +10,7 @@
 # Package-Requires: ()
 # Last-Updated:
 #           By:
-#     Update #: 22
+#     Update #: 26
 # URL:
 # Doc URL:
 # Keywords:
@@ -78,15 +78,18 @@ class QueryStatus:
             'orderNo': args.get('orderNo'),
             'info': []
         }
-        if requestinfo:
-            self.db.execute('SELECT * FROM %s WHERE usercode = ?' %Global.GLOBAL_TABLE_PAYMENT_USER, (requestinfo['usercode']))
-            userinfo = self.db.fetchone()
-            data['resultCode'] = requestinfo['resultcode']
-            data['status'] = requestinfo['status']
-            data['info'] = [{'startCount': 200, 'endCount': userinfo['count'] + 200}]
-        else:
-            data['resultCode'] = '0000110'
-            data['resultMessage'] = u"数据未找到"
+        try:
+            if requestinfo:
+                self.db.execute('SELECT * FROM %s WHERE usercode = ?' %Global.GLOBAL_TABLE_PAYMENT_USER, (requestinfo['usercode'], ))
+                userinfo = self.db.fetchone()
+                data['resultCode'] = requestinfo['resultcode']
+                data['status'] = requestinfo['status']
+                data['info'].append({'startCount': 200, 'endCount': userinfo['count'] + 200})
+            else:
+                data['resultCode'] = '0000110'
+                data['resultMessage'] = u"数据未找到"
+        except Exception, e:
+            logger.error(e)
         sign = '%s= %s%s' %('data', json.dumps(data), Global.GLOBAL_MERCHANTS.get('lencee'))
         result = {
             'data': data,
