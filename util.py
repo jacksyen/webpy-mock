@@ -37,6 +37,13 @@ class RandomUtil:
         return result
 
     @staticmethod
+    def random20Str():
+        num = random.randint(10,99)
+        result = '%s%.4f%d' %(time.localtime().tm_year,time.time(), num)
+        result = result.replace('.','')
+        return result
+
+    @staticmethod
     def random32Str():
         return uuid.uuid1().hex
 

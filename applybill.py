@@ -10,7 +10,7 @@
 # Package-Requires: ()
 # Last-Updated:
 #           By:
-#     Update #: 58
+#     Update #: 64
 # URL:
 # Doc URL:
 # Keywords:
@@ -73,9 +73,9 @@ class ApplyBill:
         paymentResultInfos = [
             {
                 'agencyCode': args.get('agencyCode'),
-                'charge':'0.0',
-                'itemNo':'',
-                'itemOutSerialNo':'',
+                'charge': resultInfo['breach'],
+                'itemNo': RandomUtil.random20Str(),
+                'itemOutSerialNo': RandomUtil.random16Str(),
                 'memo': resultInfo['memo'],
                 'money': resultInfo['paymentmoney'],
                 'status': resultInfo['querystatus'],
@@ -84,7 +84,9 @@ class ApplyBill:
                 'address': resultInfo['address'],
                 'username': resultInfo['username'],
                 'count': resultInfo['count'],
-                'price': resultInfo['price']
+                'price': resultInfo['price'],
+                'startCount': '200',
+                'endCount': str(resultInfo['count'] + 200),
             }
         ]
 

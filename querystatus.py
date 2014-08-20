@@ -10,7 +10,7 @@
 # Package-Requires: ()
 # Last-Updated:
 #           By:
-#     Update #: 28
+#     Update #: 33
 # URL:
 # Doc URL:
 # Keywords:
@@ -84,7 +84,13 @@ class QueryStatus:
                 userinfo = self.db.fetchone()
                 data['resultCode'] = requestinfo['resultcode']
                 data['status'] = requestinfo['status']
-                data['info'].append({'startCount': 200, 'endCount': userinfo['count'] + 200})
+                info_item = {
+                    'startCount': '200',
+                    'endCount': str(userinfo['count'] + 200),
+                    'userCode': userinfo['usercode'],
+                    'userName': userinfo['username']
+                }
+                data['info'].append(info_item)
             else:
                 data['resultCode'] = '0000110'
                 data['resultMessage'] = u"数据未找到"
