@@ -34,6 +34,9 @@ body {
 .long{
     width: 300px;
 }
+.suplong{
+    width: 400px;
+}
 .short{
     width: 80px;
 }

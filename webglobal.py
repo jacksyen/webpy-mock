@@ -8,9 +8,9 @@
 # Created: 二  8月  5 23:15:01 2014 (+0800)
 # Version: 
 # Package-Requires: ()
-# Last-Updated: 周二 八月 19 15:16:00 2014 (+0800)
+# Last-Updated: 周三 八月 20 16:59:07 2014 (+0800)
 #           By: Administrator
-#     Update #: 28
+#     Update #: 34
 # URL: 
 # Doc URL: 
 # Keywords: 
@@ -81,8 +81,8 @@ class Global:
         {'userCode': '2000008', 'userName': '张尼', 'queryStatus': 'true', 'queryResultCode': '0000121', 'paymentType': '000020', 'count':22, 'price': 3.78},
 
         # 电费
-        # 直接成功
-        {'userCode': '3000001', 'userName': '占方式', 'queryStatus': 'true', 'queryResultCode': '0000000','address': '重庆市渝中区11号', 'memo': '缴费成功', 'count': 81, 'paymentStatus': 'SUCCESS', 'paymentResultCode': '0000000', 'paymentType': '000030', 'price': 0.78},
+        # 直接成功(缴费后变换成无缴费状态)
+        {'userCode': '3000001', 'userName': '占方式', 'queryStatus': 'true', 'queryResultCode': '0000000','address': '重庆市渝中区11号', 'memo': '缴费成功', 'count': 81, 'paymentStatus': 'SUCCESS', 'paymentResultCode': '0000000', 'paymentType': '000030', 'price': 0.78, 'flag': True},
         # 直接失败
         {'userCode': '3000002', 'userName': '张三丰', 'queryStatus': 'true', 'queryResultCode': '0000000','address': '重庆市江北区健康路121号', 'memo': '缴费失败', 'count': 9, 'paymentStatus': 'FAIL', 'paymentResultCode': '0000106', 'paymentType': '000030', 'price': 0.78},
         # 挂起转失败

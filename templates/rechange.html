@@ -12,7 +12,8 @@ $var title: 增加商户预存款
       <div class='td'>缴费金额</div>
       <div class='td'>缴费类型</div>
       <div class='td'>当前滞纳金</div>
-      <div class='td long'>操作</div>
+      <div class='td'>当前状态</div>
+      <div class='td suplong'>操作</div>
     </div>
     <div clear='both'></div>
     $for info in infos:
@@ -30,10 +31,18 @@ $var title: 增加商户预存款
 	       手机充值
 	 </div>
          <div class='td' breach>$info['breach']</div>
-         <div class='td long'>
+         <div class='td' status>
+           $if info['flag'] == 1:
+               缴费成功后无欠费
+           $else:
+               一直可以缴费
+         </div>
+         <div class='td suplong'>
            <button onclick='submit2(this)'>修改金额</button>(+1.5 CNY)
            &nbsp;&nbsp;
-           <button onclick='clearBreach(this)'>清空滞纳金</button>
+           <button onclick='clearBreach(this, "breach")'>清空滞纳金</button>
+           &nbsp;&nbsp;
+           <button onclick='switchStatus(this, "status")'>切换状态</button>
          </div>
          <div class='td msg'><span msg></span></div>
       </div>

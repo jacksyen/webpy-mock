@@ -16,6 +16,7 @@ from rechangepost import RechangePost
 from checkthread import CheckThread
 from addbreach import AddBreach
 from clearbreach import ClearBreach
+from switchstatus import SwitchStatus
 
 urls = (
     '/','index',
@@ -23,6 +24,7 @@ urls = (
     '/rechange/post', 'RechangePost',
     '/rechange/change', 'AddBreach',
     '/rechange/clear', 'ClearBreach'
+    '/rechange/switch', 'SwitchStatus'
 )
 
 class index:

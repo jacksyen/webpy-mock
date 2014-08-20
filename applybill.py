@@ -10,7 +10,7 @@
 # Package-Requires: ()
 # Last-Updated:
 #           By:
-#     Update #: 67
+#     Update #: 79
 # URL:
 # Doc URL:
 # Keywords:
@@ -45,6 +45,7 @@
 #
 import json
 
+from log import logger
 from util import RandomUtil
 from util import MD5Util
 from util import DateUtil
@@ -119,6 +120,13 @@ class ApplyBill:
             iskeephangup = 0
         self.db.execute('INSERT INTO easylife_payment_order(easylifeorderno, outbizno, status, paymenttype, usercode, resultcode, paymentamount, iskeephangup, addtime, updatetime) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', (easyLifeOrderNo, args.get('outBizNo'), orderStatus, resultInfo['paymenttype'], args.get('userCode'), resultCode, float(args.get('paymentAmount')), iskeephangup, DateUtil.getDate(format='%Y-%m-%d %H:%M:%S'), DateUtil.getDate(format='%Y-%m-%d %H:%M:%S')))
         self.conn.commit()
+
+        # 如果用户表flag=1,更新用户查询结果码为：0000121
+        if resultInfo['flag'] == 1:
+            self.db.execute('UPDATE %s SET queryresultcode = ? WHERE usercode = ?' %Global.GLOBAL_TABLE_PAYMENT_USER, ('0000121', args.get('userCode'),))
+            self.conn.commit()
+            logger.info(u'更新用户%s查询结果码:%s' %(args.get('userCode'), '0000121'))
+
         result = {
             'success': 'T',
             'signType': 'MD5',

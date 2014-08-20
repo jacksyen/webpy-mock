@@ -10,7 +10,7 @@
 # Package-Requires: ()
 # Last-Updated:
 #           By:
-#     Update #: 16
+#     Update #: 22
 # URL:
 # Doc URL:
 # Keywords:
@@ -85,6 +85,12 @@ class CheckThread(threading.Thread):
             res = self.getresult(info['paymentAmount'], flagNum)
             self.db.execute('UPDATE easylife_payment_order SET status = ?, resultcode = ?, updatetime = ? WHERE easylifeorderno = ?', (res.get('status'), res.get('resultCode'), DateUtil.getDate(format='%Y-%m-%d %H:%M:%S'), info['easyLifeOrderNo']))
             self.conn.commit()
+
+            # 如果用户表flag=1,更新用户查询结果码为：0000121
+            if account['flag'] == 1:
+                self.db.execute('UPDATE %s SET queryresultcode = ? WHERE usercode = ?' %Global.GLOBAL_TABLE_PAYMENT_USER, ('0000121', info['usercode']))
+                self.conn.commit()
+                logger.info(u'更新用户%s查询结果码:%s' %(info['usercode'], '0000121'))
             logger.info(u'修改订单：%s状态为%s，剩余备付金：%s' %(info['easyLifeOrderNo'], res.get('status'), res.get('balance')))
 
     def run(self):

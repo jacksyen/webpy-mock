@@ -54,6 +54,10 @@ function submit2(t){
 }
 
 function clearBreach(t){
+  handler(t, '/rechange/clear', n);
+}
+
+function handler(t, url, n){
   var ele = $(t.parentElement.parentElement);
   var usercode = ele.find('[usercode]').attr('usercode');
   if(usercode == undefined || usercode == ''){
@@ -61,8 +65,8 @@ function clearBreach(t){
     return;
   }
   ele.find('[msg]').html('处理中，请稍候...');
-    $.ajax({
-    url: '/rechange/clear',
+  $.ajax({
+    url: url,
     type: 'POST',
     data: {'usercode': usercode},
     dataType: 'json',
@@ -70,7 +74,7 @@ function clearBreach(t){
       var msg = '';
       msg = result.msg;
       if(result.status == 'SUCCESS'){
-        ele.find('[breach]').html(result.breach);
+        ele.find('[' + n +']').html(result.breach);
       }
       ele.find('[msg]').html(msg);
       ele.find('[msg]').fadeTo(5000, 0.50, function (){
@@ -78,4 +82,8 @@ function clearBreach(t){
       });
     }
   });
+}
+
+function switchStatus(t, n){
+  handler(t, '/rechange/switch', n);
 }
