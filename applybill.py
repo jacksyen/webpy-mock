@@ -10,7 +10,7 @@
 # Package-Requires: ()
 # Last-Updated:
 #           By:
-#     Update #: 64
+#     Update #: 67
 # URL:
 # Doc URL:
 # Keywords:
@@ -78,13 +78,14 @@ class ApplyBill:
                 'itemOutSerialNo': RandomUtil.random16Str(),
                 'memo': resultInfo['memo'],
                 'money': resultInfo['paymentmoney'],
+                'month': DateUtil.getDate(),
                 'status': resultInfo['querystatus'],
                 'type': resultInfo['paymentType'],
                 'userCode': args.get('userCode'),
                 'address': resultInfo['address'],
                 'username': resultInfo['username'],
                 'count': resultInfo['count'],
-                'price': resultInfo['price'],
+                #'price': resultInfo['price'],
                 'startCount': '200',
                 'endCount': str(resultInfo['count'] + 200),
             }
