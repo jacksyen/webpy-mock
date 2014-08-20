@@ -10,7 +10,7 @@
 # Package-Requires: ()
 # Last-Updated:
 #           By:
-#     Update #: 33
+#     Update #: 42
 # URL:
 # Doc URL:
 # Keywords:
@@ -84,13 +84,18 @@ class QueryStatus:
                 userinfo = self.db.fetchone()
                 data['resultCode'] = requestinfo['resultcode']
                 data['status'] = requestinfo['status']
-                info_item = {
-                    'startCount': '200',
-                    'endCount': str(userinfo['count'] + 200),
-                    'userCode': userinfo['usercode'],
-                    'userName': userinfo['username']
-                }
-                data['info'].append(info_item)
+                
+                # 查询用户欠费信息
+                self.db.execute('SELECT * FROM %s WHERE usercode = ?' %Global.GLOBAL_TABLE_USER_ARREARS, (args.get('userCode'), ))
+                userArrears = self.db.fetchall()
+                # 欠费查询状态缴费明细
+                for arrear in userArrears:
+                    item = {
+                        'startCount': str(arrear['startcount']),
+                        'endCount': str(arrear['count']),
+                        'userCode': userinfo['usercode'],
+                        'userName': userinfo['username']}
+                    data['info'].append(item)
             else:
                 data['resultCode'] = '0000110'
                 data['resultMessage'] = u"数据未找到"

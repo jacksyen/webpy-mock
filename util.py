@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 import hashlib
 import random
-import time
+import time, datetime
 import uuid
 
 '''
@@ -57,6 +57,12 @@ class DateUtil:
     def getDate(format='%Y%m'):
         t = time.localtime(time.time())
         return time.strftime(format, t)
+
+    @staticmethod
+    def getCutDate(month=0, format='%Y%m'):
+        now = datetime.now()
+        now = now - datetime.timedelta(days=31)
+        return now.strftime(format)
 
 '''
 class JSONUtil:

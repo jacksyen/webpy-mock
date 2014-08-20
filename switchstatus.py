@@ -10,7 +10,7 @@
 # Package-Requires: ()
 # Last-Updated:
 #           By:
-#     Update #: 22
+#     Update #: 25
 # URL:
 # Doc URL:
 # Keywords:
@@ -72,12 +72,13 @@ class SwitchStatus:
             dbFlag = userInfo['flag']
             if dbFlag == 1:
                 dbFlag = 0
+                result['busStatus'] = '一直可以缴费'
             else:
                 dbFlag = 1
+                result['busStatus'] = '缴费成功后无欠费'
             self.db.execute('UPDATE %s SET flag = ?, updatetime = ? WHERE usercode = ?' %Global.GLOBAL_TABLE_PAYMENT_USER, (dbFlag, DateUtil.getDate(format='%Y-%m-%d %H:%M:%S'), userCode))
             self.conn.commit()
             result['status'] = 'SUCCESS'
-            result['breach'] = '0.0'
             result['msg'] = '修改成功'
         except Exception, e:
             logger.error(u'切换状态失败')

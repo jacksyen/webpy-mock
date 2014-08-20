@@ -10,7 +10,7 @@
 # Package-Requires: ()
 # Last-Updated:
 #           By:
-#     Update #: 79
+#     Update #: 95
 # URL:
 # Doc URL:
 # Keywords:
@@ -71,27 +71,30 @@ class ApplyBill:
         resultInfo = self.db.fetchone()
         if resultInfo == None:
             return None
-        paymentResultInfos = [
-            {
-                'agencyCode': args.get('agencyCode'),
-                'charge': resultInfo['breach'],
-                'itemNo': RandomUtil.random20Str(),
-                'itemOutSerialNo': RandomUtil.random16Str(),
-                'memo': resultInfo['memo'],
-                'money': resultInfo['paymentmoney'],
-                'month': DateUtil.getDate(),
-                'status': resultInfo['querystatus'],
-                'type': resultInfo['paymentType'],
-                'userCode': args.get('userCode'),
-                'address': resultInfo['address'],
-                'username': resultInfo['username'],
-                'count': resultInfo['count'],
-                #'price': resultInfo['price'],
-                'startCount': '200',
-                'endCount': str(resultInfo['count'] + 200),
-            }
-        ]
 
+        # 查询用户欠费信息
+        self.db.execute('SELECT * FROM %s WHERE usercode = ?' %Global.GLOBAL_TABLE_USER_ARREARS, (args.get('userCode'), ))
+        userArrears = self.db.fetchall()
+        paymentResultInfos = []
+        for arrear in userArrears:
+            info = {
+                'itemOutSerialNo': RandomUtil.random16Str(),
+                'agencyCode': args.get('agencyCode'),
+                'userCode': args.get('userCode'),
+                'charge': arrear['breach'],
+                'itemNo': arrear['itemno'],
+                'money': arrear['itemmoney'],
+                'month': arrear['month'],
+                'count': str(arrear['count']),
+                'startCount': str(arrear['startcount']),
+                'endCount': str(resultInfo['endcount']),
+                'status': resultInfo['querystatus'],
+                'type': resultInfo['paymentType'],    
+                'memo': resultInfo['memo'],
+                'address': resultInfo['address'],
+                #'price': resultInfo['price'],
+                'username': resultInfo['username']}
+            paymentResultInfos.append(info)
         easyLifeOrderNo = RandomUtil.random32Str()
         self.db.execute('SELECT balance FROM %s WHERE merchantkey = ? ORDER BY updatetime desc limit 1' %Global.GLOBAL_TABLE_BALANCE, (Global.GLOBAL_MERCHANTS.get('lencee'),))
         querybalance = self.db.fetchone()

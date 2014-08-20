@@ -23,8 +23,8 @@ urls = (
     '/rechange','Rechange',
     '/rechange/post', 'RechangePost',
     '/rechange/change', 'AddBreach',
-    '/rechange/clear', 'ClearBreach'
-    '/rechange/switch', 'SwitchStatus'
+    '/rechange/clear', 'ClearBreach',
+    '/rechange/switch', 'SwitchStatus',
 )
 
 class index:
