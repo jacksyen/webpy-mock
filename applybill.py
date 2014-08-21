@@ -10,7 +10,7 @@
 # Package-Requires: ()
 # Last-Updated:
 #           By:
-#     Update #: 96
+#     Update #: 107
 # URL:
 # Doc URL:
 # Keywords:
@@ -71,18 +71,22 @@ class ApplyBill:
         resultInfo = self.db.fetchone()
         if resultInfo == None:
             return None
-
         # 查询用户欠费信息
         self.db.execute('SELECT * FROM %s WHERE usercode = ?' %Global.GLOBAL_TABLE_USER_ARREARS, (args.get('userCode'), ))
         userArrears = self.db.fetchall()
         paymentResultInfos = []
         for arrear in userArrears:
+            channelCode = arrear['channelcode']
+            itemOutSerialNo = ''
+            for paymentItem in json.loads(args.get('paymentOrderItemList')):
+                if str(channelCode) == str(paymentItem.get('channelCode')):
+                    itemOutSerialNo = paymentItem.get('itemOutSerialNo')
             info = {
-                'itemOutSerialNo': RandomUtil.random16Str(),
+                'itemOutSerialNo': itemOutSerialNo,
                 'agencyCode': args.get('agencyCode'),
                 'userCode': args.get('userCode'),
                 'charge': arrear['breach'],
-                'itemNo': arrear['itemno'],
+                'itemNo': RandomUtil.random20Str(),
                 'money': arrear['itemmoney'],
                 'month': arrear['month'],
                 'count': str(arrear['count']),

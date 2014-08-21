@@ -10,7 +10,7 @@
 # Package-Requires: ()
 # Last-Updated:
 #           By:
-#     Update #: 76
+#     Update #: 87
 # URL:
 # Doc URL:
 # Keywords:
@@ -71,13 +71,12 @@ class QueryBill:
     查询欠费
     '''
     def queryBill(self, args):
-        self.db.execute('SELECT * FROM %s WHERE usercode = ?' %Global.GLOBAL_TABLE_PAYMENT_USER, (args.get('userCode'), ))
+        queryType = args.get('queryType')
+        userCode = args.get('userCode')
+        self.db.execute('SELECT * FROM %s WHERE usercode = ? and paymenttype = ?' %Global.GLOBAL_TABLE_PAYMENT_USER, (userCode, queryType))
         userInfo = self.db.fetchone()
         if userInfo == None:
-            if args.get('queryType') == '000030':
-                resultCode = '0000204'
-            else:
-                resultCode = '0000120'
+            resultCode = '0000120'
         else:
             resultCode = userInfo['queryresultcode']
         # 如果查询结果等于0000205，直接return
@@ -91,15 +90,14 @@ class QueryBill:
             'success': 'T'
         }
         if resultCode == '0000000':
-
             # 查询用户欠费信息
-            self.db.execute('SELECT * FROM %s WHERE usercode = ?' %Global.GLOBAL_TABLE_USER_ARREARS, (args.get('userCode'), ))
+            self.db.execute('SELECT * FROM %s WHERE usercode = ?' %Global.GLOBAL_TABLE_USER_ARREARS, (userCode, ))
             userArrears = self.db.fetchall()
             paymentMoney = 0
             items = []
             for arrear in userArrears:
                 item = {
-                    'channelCode': RandomUtil.random9Str(),
+                    'channelCode': arrear['channelcode'],
                     'charge': arrear['breach'],
                     'month': arrear['month'],
                     'payables': arrear['itemmoney'],
