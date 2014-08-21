@@ -10,7 +10,7 @@
 # Package-Requires: ()
 # Last-Updated:
 #           By:
-#     Update #: 25
+#     Update #: 30
 # URL:
 # Doc URL:
 # Keywords:
@@ -76,7 +76,7 @@ class SwitchStatus:
             else:
                 dbFlag = 1
                 result['busStatus'] = '缴费成功后无欠费'
-            self.db.execute('UPDATE %s SET flag = ?, updatetime = ? WHERE usercode = ?' %Global.GLOBAL_TABLE_PAYMENT_USER, (dbFlag, DateUtil.getDate(format='%Y-%m-%d %H:%M:%S'), userCode))
+            self.db.execute('UPDATE %s SET flag = ?, queryresultcode = ?, updatetime = ? WHERE usercode = ?' %Global.GLOBAL_TABLE_PAYMENT_USER, (dbFlag, '0000000', DateUtil.getDate(format='%Y-%m-%d %H:%M:%S'), userCode))
             self.conn.commit()
             result['status'] = 'SUCCESS'
             result['msg'] = '修改成功'
