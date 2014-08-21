@@ -8,9 +8,9 @@
 # Created: 二  8月  5 23:15:01 2014 (+0800)
 # Version: 
 # Package-Requires: ()
-# Last-Updated: 三  8月 20 23:39:43 2014 (+0800)
-#           By: jacksyen
-#     Update #: 89
+# Last-Updated: 周四 八月 21 09:37:00 2014 (+0800)
+#           By: Administrator
+#     Update #: 91
 # URL: 
 # Doc URL: 
 # Keywords: 
@@ -195,11 +195,6 @@ class Global:
     GLOBAL_ACCOUNT = [
         # 水费
         # 直接成功
-        {'userCode': '1000001', 'userName': '东家', 'queryStatus': 'true', 'queryResultCode': '0000000', 'address': '重庆市渝中区88号', 'memo': '缴费成功', 'paymentStatus': 'SUCCESS', 'paymentResultCode': '0000000', 'paymentType': '000010'},
-
-
-
-
         {'userCode': '1000001', 'userName': '东家', 'queryStatus': 'true', 'queryResultCode': '0000000', 'address': '重庆市渝中区88号', 'memo': '缴费成功', 'paymentStatus': 'SUCCESS', 'paymentResultCode': '0000000', 'paymentType': '000010'},
         # 直接失败
         {'userCode': '1000002', 'userName': '李嘉家', 'queryStatus': 'true', 'queryResultCode': '0000000', 'address': '重庆市江北区999号', 'memo': '缴费失败', 'paymentStatus': 'FAIL', 'paymentResultCode': '0000106', 'paymentType': '000010'},

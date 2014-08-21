@@ -60,8 +60,8 @@ class DateUtil:
 
     @staticmethod
     def getCutDate(month=0, format='%Y%m'):
-        now = datetime.now()
-        now = now - datetime.timedelta(days=31)
+        now = datetime.datetime.now()
+        now = now - datetime.timedelta(days=month*31)
         return now.strftime(format)
 
 '''

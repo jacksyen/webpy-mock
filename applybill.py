@@ -10,7 +10,7 @@
 # Package-Requires: ()
 # Last-Updated:
 #           By:
-#     Update #: 95
+#     Update #: 96
 # URL:
 # Doc URL:
 # Keywords:
@@ -87,9 +87,9 @@ class ApplyBill:
                 'month': arrear['month'],
                 'count': str(arrear['count']),
                 'startCount': str(arrear['startcount']),
-                'endCount': str(resultInfo['endcount']),
+                'endCount': str(arrear['endcount']),
                 'status': resultInfo['querystatus'],
-                'type': resultInfo['paymentType'],    
+                'type': resultInfo['paymentType'],
                 'memo': resultInfo['memo'],
                 'address': resultInfo['address'],
                 #'price': resultInfo['price'],
