@@ -10,7 +10,7 @@
 # Package-Requires: ()
 # Last-Updated:
 #           By:
-#     Update #: 42
+#     Update #: 68
 # URL:
 # Doc URL:
 # Keywords:
@@ -75,15 +75,27 @@ class Rechange:
         balance = querybalance['balance']
 
         # 获取所有缴费用户
-        self.db.execute('SELECT usercode, paymentmoney, breach, flag, paymenttype FROM %s WHERE paymentstatus = "SUCCESS" and paymenttype != "000040" ORDER BY paymenttype' %Global.GLOBAL_TABLE_PAYMENT_USER)
+        self.db.execute('SELECT usercode, flag, paymenttype FROM %s WHERE paymentstatus = "SUCCESS" and paymenttype != "000040" ORDER BY paymenttype' %Global.GLOBAL_TABLE_PAYMENT_USER)
         infos = self.db.fetchall()
         newInfos = [dict(row) for row in infos]
         for info in newInfos:
             # 获取用户的欠费信息
-            self.db.execute('SELECT sum(itemmoney) paymentmoney, sum(breach) breach from %s WHERE usercode = ?' %Global.GLOBAL_TABLE_USER_ARREARS, (info['usercode'],))
-            arrear = self.db.fetchone()
-            info['paymentmoney'] = arrear['paymentmoney']
-            info['breach'] = arrear['breach']
+            self.db.execute('SELECT channelcode, usercode, count, startcount, endcount, price, breach, itemmoney, month from %s WHERE usercode = ?' %Global.GLOBAL_TABLE_USER_ARREARS, (info['usercode'],))
+            arrear = self.db.fetchall()
+            newArrear = [dict(row) for row in arrear]
+            ## 欠费总额
+            paymentMoney = 0
+            ## 总滞纳金
+            breach = 0
+            info['items'] = []
+            for arr in newArrear:
+                paymentMoney = float(format(paymentMoney + float(arr['itemmoney']), '.2f'))
+                breach =float(format(breach + float(arr['breach']), '.2f'))
+                # 用户欠费信息
+                info['items'].append(arr)
+            info['paymentmoney'] = paymentMoney
+            info['breach'] = breach
+
         return self.render.rechange(balance, newInfos)
 #
 # rechange.py ends here

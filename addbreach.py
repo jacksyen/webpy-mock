@@ -10,7 +10,7 @@
 # Package-Requires: ()
 # Last-Updated:
 #           By:
-#     Update #: 24
+#     Update #: 64
 # URL:
 # Doc URL:
 # Keywords:
@@ -65,27 +65,36 @@ class AddBreach:
         args = web.input()
         logger.info(u'入参:%s' %args)
         userCode = args.get('usercode')
+        channelCode =args.get('channelcode')
         # 查询用户欠费信息
-        self.db.execute('SELECT sum(itemmoney) paymentmoney, sum(breach) breach, itemno FROM %s WHERE usercode =?' %Global.GLOBAL_TABLE_USER_ARREARS, (userCode,))
+        self.db.execute('SELECT channelcode, usercode, count, startcount, endcount, price, breach, itemmoney, month FROM %s WHERE usercode = ? AND channelcode = ?' %Global.GLOBAL_TABLE_USER_ARREARS, (userCode, channelCode))
         info = self.db.fetchone()
         result = {}
         if not info:
-            result['msg'] = u'缴费用户信息未找到'
+            result['msg'] = u'用户欠费信息未找到'
             r = json.dumps(result)
-            logger.info(u'修改金额返回:%s' %r)
+            logger.info(u'修改滞纳金返回:%s' %r)
             return r
         try:
-            amount = info['paymentmoney']
-            balance = float(format(amount + 1.50, '.2f'))
-            breach = str(format(float(info['breach']) + 1.5, '.2f'))
-            self.db.execute('UPDATE %s SET paymentmoney = ?, breach = ?, updatetime = ? WHERE usercode = ?' %Global.GLOBAL_TABLE_PAYMENT_USER, (balance, breach, DateUtil.getDate(format='%Y-%m-%d %H:%M:%S'), userCode))
+            # 更新用户欠费明细
+            newItemMoney = float(format(info['itemmoney'] + 1.50, '.2f'))
+            breach = str(format(float(info['breach']) + 1.50, '.2f'))
+            self.db.execute('UPDATE %s SET breach = ?, itemmoney = ?, updatetime = ? WHERE channelcode = ? AND usercode = ?' %Global.GLOBAL_TABLE_USER_ARREARS, (breach, newItemMoney, DateUtil.getDate(format='%Y-%m-%d %H:%M:%S'), channelCode, userCode))
             self.conn.commit()
+
+            # 查询用户总欠费、滞纳金
+            self.db.execute('SELECT sum(itemmoney) paymentmoney, sum(breach) breach FROM %s WHERE usercode = ?' %Global.GLOBAL_TABLE_USER_ARREARS, (userCode, ))
+            newInfo = self.db.fetchone()
+
+            # 增加返回结果
             result['status'] = 'SUCCESS'
-            result['balance'] = balance
+            result['itemmoney'] = newItemMoney
             result['breach'] = breach
+            result['totalmoney'] = float(format(newInfo['paymentmoney'], '.2f'))
+            result['totalbreach'] = float(format(newInfo['breach'], '.2f'))
             result['msg'] = '修改成功'
         except Exception, e:
-            logger.error(u'增加滞纳金失败')
+            logger.error(u'增加滞纳金失败%s' %e)
             result['msg'] = u'修改失败'
         r = json.dumps(result)
         logger.info(u'修改金额返回:%s' %r)

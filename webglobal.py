@@ -8,9 +8,9 @@
 # Created: 二  8月  5 23:15:01 2014 (+0800)
 # Version: 
 # Package-Requires: ()
-# Last-Updated: 周四 八月 21 10:47:25 2014 (+0800)
+# Last-Updated: 周四 八月 21 15:44:01 2014 (+0800)
 #           By: Administrator
-#     Update #: 101
+#     Update #: 112
 # URL: 
 # Doc URL: 
 # Keywords: 
@@ -75,6 +75,11 @@ class Global:
             {
                 'startCount': 180,
                 'count': 42,
+                'price': 1.78,
+                'breach': '0.00'},
+            {
+                'startCount': 3808,
+                'count': 37,
                 'price': 1.78,
                 'breach': '0.00'}],
         '1000004': [
@@ -188,6 +193,11 @@ class Global:
                 'price': 0.67,
                 'breach': '0.00'},
             {
+                'startCount': 438,
+                'count': 78,
+                'price': 0.67,
+                'breach': '0.00'},
+            {
                 'startCount': 48,
                 'count': 566,
                 'price': 0.67,
@@ -207,6 +217,16 @@ class Global:
             {
                 'startCount': 189,
                 'count': 17,
+                'price': 0.67,
+                'breach': '0.00'},
+            {
+                'startCount': 7810,
+                'count': 73,
+                'price': 0.67,
+                'breach': '0.00'},
+            {
+                'startCount': 779,
+                'count': 32,
                 'price': 0.67,
                 'breach': '0.00'}],
         '3000008': [

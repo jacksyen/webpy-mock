@@ -9,17 +9,16 @@ $var title: 增加商户预存款
   <div>
     <div class='tr high'>
       <div class='td'><span>缴费号码</span></div>
-      <div class='td'>缴费金额</div>
       <div class='td'>缴费类型</div>
-      <div class='td'>当前滞纳金</div>
+      <div class='td'>欠费总金额</div>
+      <div class='td'>总滞纳金</div>
       <div class='td'>当前状态</div>
-      <div class='td suplong'>操作</div>
+      <div class='td long'>操作</div>
     </div>
-    <div clear='both'></div>
+    <div class='clear'></div>
     $for info in infos:
-      <div class='tr'>
+      <div class='tr' id='info-$info["usercode"]'>
          <div class='td' usercode=$info['usercode']>$info['usercode']</div>
-         <div class='td' amount>$info['paymentmoney']</div>
          <div class='td'>
 	   $if info['paymenttype'] == '000010':
 	       水费
@@ -30,6 +29,7 @@ $var title: 增加商户预存款
 	   $elif info['paymenttype'] == '000040':
 	       手机充值
 	 </div>
+         <div class='td' amount>$info['paymentmoney']</div>
          <div class='td' breach>$info['breach']</div>
          <div class='td' status>
            $if info['flag'] == 1:
@@ -37,38 +37,43 @@ $var title: 增加商户预存款
            $else:
                一直可以缴费
          </div>
-         <div class='td suplong'>
-           <button onclick='submit2(this)'>修改滞纳金</button>(+1.5 CNY)
-           &nbsp;&nbsp;
-           <button onclick='clearBreach(this)'>清空滞纳金</button>
-           &nbsp;&nbsp;
+         <div class='td long'>
            <button onclick='switchStatus(this)'>切换状态</button>
          </div>
-         <div class='td msg'><span msg></span></div>
+         <div class='msg'><span msg></span></div>
       </div>
       <div class='clear'></div>
       <!-- 欠费列表start -->
       <div class='list'>
-        <div class='list-left'>明细</div>
+        <div class='list-left'></div>
         <div class='list-right'>
           <!-- 欠费明细标题start -->
           <div class='tr list-tr-title'>
             <div class='td'>明细编号</div>
             <div class='td'>月份</div>
             <div class='td'>明细欠费金额</div>
-            <div class='td'>滞纳金</div>
+            <div class='td'>明细滞纳金</div>
+            <div class='td suplong'></div>
           </div><!-- 欠费明细标题end -->
-          <!-- 欠费明细内容start -->
-          <div class='tr list-tr'>
-            <div class='td'>dssd</div>
-            <div class='td'>dssd</div>
-            <div class='td'>dssd</div>
-            <div class='td'>dssd</div>
-          </div><!-- 欠费明细内容end -->
+          $for item in info['items']:
+            <!-- 欠费明细内容start -->
+            <div class='tr list-tr'>
+               <div usercode=$info['usercode']></div>
+               <div class='td' channelcode=$item['channelcode']>$item['channelcode']</div>
+               <div class='td'>$item['month']</div>
+               <div class='td' itemmoney>$item['itemmoney']</div>
+               <div class='td' breach>$item['breach']</div>
+               <div class='td suplong'>
+                 <button onclick='itemHandler(this, "change")'>修改滞纳金</button>(+1.5 CNY)
+                 &nbsp;&nbsp;
+                 <button onclick='itemHandler(this, "clear")'>清空滞纳金</button>
+                 &nbsp;&nbsp;
+               </div>
+               <div class='msg'><span msg></span></div>
+            </div><!-- 欠费明细内容end -->
+            <div class='clear'></div>
         </div>
       </div><!-- 欠费列表end -->
-
-
       <div class='clear'></div>
    <div class='tr end'></div>
    <div class='high red'>注：所有可以设置滞纳金的帐号，点击修改滞纳金，在原始缴费金额上加1.5元成为滞纳金</div>

@@ -10,7 +10,7 @@
 # Package-Requires: ()
 # Last-Updated:
 #           By:
-#     Update #: 11
+#     Update #: 20
 # URL:
 # Doc URL:
 # Keywords:
@@ -65,12 +65,22 @@ class ClearBreach:
         args = web.input()
         logger.info(u'入参:%s' %args)
         userCode = args.get('usercode')
+        channelCode = args.get('channelcode')
         result = {}
         try:
-            self.db.execute('UPDATE %s SET breach = ?, updatetime = ? WHERE usercode = ?' %Global.GLOBAL_TABLE_PAYMENT_USER, ('0.0', DateUtil.getDate(format='%Y-%m-%d %H:%M:%S'), userCode))
+            # 修改欠费明细滞纳金
+            self.db.execute('UPDATE %s SET breach = ?, updatetime = ? WHERE channelcode = ? AND usercode = ?' %Global.GLOBAL_TABLE_USER_ARREARS, ('0.0', DateUtil.getDate(format='%Y-%m-%d %H:%M:%S'), channelCode, userCode))
             self.conn.commit()
+
+            # 查询用户总欠费、滞纳金
+            self.db.execute('SELECT sum(itemmoney) paymentmoney, sum(breach) breach FROM %s WHERE usercode = ?' %Global.GLOBAL_TABLE_USER_ARREARS, (userCode, ))
+            newInfo = self.db.fetchone()
+
+            # 返回结果
             result['status'] = 'SUCCESS'
             result['breach'] = '0.0'
+            result['totalmoney'] = float(format(newInfo['paymentmoney'], '.2f'))
+            result['totalbreach'] = float(format(newInfo['breach'], '.2f'))
             result['msg'] = '修改成功'
         except Exception, e:
             logger.error(u'清空滞纳金失败')
