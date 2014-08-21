@@ -10,7 +10,7 @@
 # Package-Requires: ()
 # Last-Updated:
 #           By:
-#     Update #: 19
+#     Update #: 24
 # URL:
 # Doc URL:
 # Keywords:
@@ -65,7 +65,8 @@ class AddBreach:
         args = web.input()
         logger.info(u'入参:%s' %args)
         userCode = args.get('usercode')
-        self.db.execute('SELECT * FROM %s WHERE usercode =?' %Global.GLOBAL_TABLE_PAYMENT_USER, (userCode,))
+        # 查询用户欠费信息
+        self.db.execute('SELECT sum(itemmoney) paymentmoney, sum(breach) breach, itemno FROM %s WHERE usercode =?' %Global.GLOBAL_TABLE_USER_ARREARS, (userCode,))
         info = self.db.fetchone()
         result = {}
         if not info:

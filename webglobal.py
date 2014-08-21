@@ -8,9 +8,9 @@
 # Created: 二  8月  5 23:15:01 2014 (+0800)
 # Version: 
 # Package-Requires: ()
-# Last-Updated: 周四 八月 21 09:37:00 2014 (+0800)
+# Last-Updated: 周四 八月 21 10:47:25 2014 (+0800)
 #           By: Administrator
-#     Update #: 91
+#     Update #: 101
 # URL: 
 # Doc URL: 
 # Keywords: 
@@ -71,6 +71,11 @@ class Global:
                 'startCount': 80,
                 'count': 20,
                 'price': 1.78,
+                'breach': '0.00'},
+            {
+                'startCount': 180,
+                'count': 42,
+                'price': 1.78,
                 'breach': '0.00'}],
         '1000004': [
             {
@@ -82,6 +87,11 @@ class Global:
             {
                 'startCount': 56,
                 'count': 20,
+                'price': 1.78,
+                'breach': '0.00'},
+            {
+                'startCount': 156,
+                'count': 57,
                 'price': 1.78,
                 'breach': '0.00'}],
         '1000006': [
@@ -159,6 +169,11 @@ class Global:
                 'startCount': 78,
                 'count': 20,
                 'price': 0.67,
+                'breach': '0.00'},
+            {
+                'startCount': 18,
+                'count': 39,
+                'price': 0.67,
                 'breach': '0.00'}],
         '3000003': [
             {
@@ -171,6 +186,11 @@ class Global:
                 'startCount': 43,
                 'count': 20,
                 'price': 0.67,
+                'breach': '0.00'},
+            {
+                'startCount': 48,
+                'count': 566,
+                'price': 0.67,
                 'breach': '0.00'}],
         '3000005': [
             {
@@ -182,6 +202,11 @@ class Global:
             {
                 'startCount': 18,
                 'count': 20,
+                'price': 0.67,
+                'breach': '0.00'},
+            {
+                'startCount': 189,
+                'count': 17,
                 'price': 0.67,
                 'breach': '0.00'}],
         '3000008': [

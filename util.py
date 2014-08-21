@@ -22,12 +22,12 @@ class RandomUtil:
     @staticmethod
     def random6Str():
         num = random.randint(100000, 999999)
-        return num
+        return str(num)
 
     @staticmethod
     def random9Str():
         num = random.random() * (1<<29)
-        return int(num)
+        return str(int(num))
 
     @staticmethod
     def random16Str():

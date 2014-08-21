@@ -10,7 +10,7 @@
 # Package-Requires: ()
 # Last-Updated:
 #           By:
-#     Update #: 75
+#     Update #: 76
 # URL:
 # Doc URL:
 # Keywords:
@@ -99,9 +99,9 @@ class QueryBill:
             items = []
             for arrear in userArrears:
                 item = {
-                    'channelCode': RandomUtil.random9Str(), 
-                    'charge': arrear['breach'], 
-                    'month': arrear['month'], 
+                    'channelCode': RandomUtil.random9Str(),
+                    'charge': arrear['breach'],
+                    'month': arrear['month'],
                     'payables': arrear['itemmoney'],
                     'type': args.get('queryType')
                     }
@@ -118,7 +118,7 @@ class QueryBill:
                 'username': userInfo['username']
             }
             data['info'] = info
-            data['totalPayable'] = paymentMoney
+            data['totalPayable'] = str(paymentMoney)
         else:
             data['resultMessage'] = Global.GLOBAL_RESP_CODE.get(resultCode)
         sign = '%s= %s%s' %('data', json.dumps(data, ensure_ascii=False), Global.GLOBAL_MERCHANTS.get('lencee'))

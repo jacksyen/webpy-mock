@@ -10,7 +10,7 @@
 # Package-Requires: ()
 # Last-Updated:
 #           By:
-#     Update #: 22
+#     Update #: 42
 # URL:
 # Doc URL:
 # Keywords:
@@ -74,8 +74,16 @@ class Rechange:
         querybalance = self.db.fetchone()
         balance = querybalance['balance']
 
+        # 获取所有缴费用户
         self.db.execute('SELECT usercode, paymentmoney, breach, flag, paymenttype FROM %s WHERE paymentstatus = "SUCCESS" and paymenttype != "000040" ORDER BY paymenttype' %Global.GLOBAL_TABLE_PAYMENT_USER)
         infos = self.db.fetchall()
-        return self.render.rechange(balance, infos)
+        newInfos = [dict(row) for row in infos]
+        for info in newInfos:
+            # 获取用户的欠费信息
+            self.db.execute('SELECT sum(itemmoney) paymentmoney, sum(breach) breach from %s WHERE usercode = ?' %Global.GLOBAL_TABLE_USER_ARREARS, (info['usercode'],))
+            arrear = self.db.fetchone()
+            info['paymentmoney'] = arrear['paymentmoney']
+            info['breach'] = arrear['breach']
+        return self.render.rechange(balance, newInfos)
 #
 # rechange.py ends here
