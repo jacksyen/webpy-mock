@@ -10,7 +10,7 @@
 # Package-Requires: ()
 # Last-Updated:
 #           By:
-#     Update #: 37
+#     Update #: 107
 # URL:
 # Doc URL:
 # Keywords:
@@ -43,7 +43,9 @@
 # along with GNU Emacs.  If not, see <http://www.gnu.org/licenses/>.
 #
 #
+import json
 
+from log import logger
 from util import RandomUtil
 from util import MD5Util
 from util import DateUtil
@@ -69,19 +71,34 @@ class ApplyBill:
         resultInfo = self.db.fetchone()
         if resultInfo == None:
             return None
-        paymentResultInfos = [
-            {
+        # 查询用户欠费信息
+        self.db.execute('SELECT * FROM %s WHERE usercode = ?' %Global.GLOBAL_TABLE_USER_ARREARS, (args.get('userCode'), ))
+        userArrears = self.db.fetchall()
+        paymentResultInfos = []
+        for arrear in userArrears:
+            channelCode = arrear['channelcode']
+            itemOutSerialNo = ''
+            for paymentItem in json.loads(args.get('paymentOrderItemList')):
+                if str(channelCode) == str(paymentItem.get('channelCode')):
+                    itemOutSerialNo = paymentItem.get('itemOutSerialNo')
+            info = {
+                'itemOutSerialNo': itemOutSerialNo,
                 'agencyCode': args.get('agencyCode'),
-                'charge':'0.0',
-                'itemNo':'',
-                'itemOutSerialNo':'',
-                'memo': resultInfo['memo'],
-                'money': resultInfo['paymentmoney'],
+                'userCode': args.get('userCode'),
+                'charge': arrear['breach'],
+                'itemNo': RandomUtil.random20Str(),
+                'money': arrear['itemmoney'],
+                'month': arrear['month'],
+                'count': str(arrear['count']),
+                'startCount': str(arrear['startcount']),
+                'endCount': str(arrear['endcount']),
                 'status': resultInfo['querystatus'],
                 'type': resultInfo['paymentType'],
-                'userCode': args.get('userCode')
-            }
-        ]
+                'memo': resultInfo['memo'],
+                'address': resultInfo['address'],
+                #'price': resultInfo['price'],
+                'username': resultInfo['username']}
+            paymentResultInfos.append(info)
         easyLifeOrderNo = RandomUtil.random32Str()
         self.db.execute('SELECT balance FROM %s WHERE merchantkey = ? ORDER BY updatetime desc limit 1' %Global.GLOBAL_TABLE_BALANCE, (Global.GLOBAL_MERCHANTS.get('lencee'),))
         querybalance = self.db.fetchone()
@@ -110,6 +127,13 @@ class ApplyBill:
             iskeephangup = 0
         self.db.execute('INSERT INTO easylife_payment_order(easylifeorderno, outbizno, status, paymenttype, usercode, resultcode, paymentamount, iskeephangup, addtime, updatetime) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', (easyLifeOrderNo, args.get('outBizNo'), orderStatus, resultInfo['paymenttype'], args.get('userCode'), resultCode, float(args.get('paymentAmount')), iskeephangup, DateUtil.getDate(format='%Y-%m-%d %H:%M:%S'), DateUtil.getDate(format='%Y-%m-%d %H:%M:%S')))
         self.conn.commit()
+
+        # 如果用户表flag=1,更新用户查询结果码为：0000121
+        if resultInfo['flag'] == 1:
+            self.db.execute('UPDATE %s SET queryresultcode = ? WHERE usercode = ?' %Global.GLOBAL_TABLE_PAYMENT_USER, ('0000121', args.get('userCode'),))
+            self.conn.commit()
+            logger.info(u'更新用户%s查询结果码:%s' %(args.get('userCode'), '0000121'))
+
         result = {
             'success': 'T',
             'signType': 'MD5',
@@ -120,7 +144,7 @@ class ApplyBill:
             'channelId': RandomUtil.random6Str(),
             'balance': balance,
             'resultCode': resultInfo['paymentresultcode'],
-            'paymentResultInfos': '%s' %paymentResultInfos
+            'paymentResultInfos': '%s' %json.dumps(paymentResultInfos, ensure_ascii=False)
         }
         from operator import itemgetter
         import urllib

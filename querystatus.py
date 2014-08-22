@@ -10,7 +10,7 @@
 # Package-Requires: ()
 # Last-Updated:
 #           By:
-#     Update #: 14
+#     Update #: 42
 # URL:
 # Doc URL:
 # Keywords:
@@ -75,15 +75,33 @@ class QueryStatus:
             'success': 'T',
             'signType': 'MD5',
             'channelId': RandomUtil.random6Str(),
-            'orderNo': args.get('orderNo')
+            'orderNo': args.get('orderNo'),
+            'info': []
         }
-        if requestinfo:
-            data['resultCode'] = requestinfo['resultCode']
-            data['status'] = requestinfo['status']
-        else:
-            data['resultCode'] = '0000110'
-            data['resultMessage'] = u"数据未找到"
-        sign = '%s= %s%s' %('data', json.dumps(data), Global.GLOBAL_MERCHANTS.get('lencee'))
+        try:
+            if requestinfo:
+                self.db.execute('SELECT * FROM %s WHERE usercode = ?' %Global.GLOBAL_TABLE_PAYMENT_USER, (requestinfo['usercode'], ))
+                userinfo = self.db.fetchone()
+                data['resultCode'] = requestinfo['resultcode']
+                data['status'] = requestinfo['status']
+                
+                # 查询用户欠费信息
+                self.db.execute('SELECT * FROM %s WHERE usercode = ?' %Global.GLOBAL_TABLE_USER_ARREARS, (args.get('userCode'), ))
+                userArrears = self.db.fetchall()
+                # 欠费查询状态缴费明细
+                for arrear in userArrears:
+                    item = {
+                        'startCount': str(arrear['startcount']),
+                        'endCount': str(arrear['count']),
+                        'userCode': userinfo['usercode'],
+                        'userName': userinfo['username']}
+                    data['info'].append(item)
+            else:
+                data['resultCode'] = '0000110'
+                data['resultMessage'] = u"数据未找到"
+        except Exception, e:
+            logger.error(e)
+        sign = '%s= %s%s' %('data', json.dumps(data, ensure_ascii=False), Global.GLOBAL_MERCHANTS.get('lencee'))
         result = {
             'data': data,
             'sign': MD5Util.md5(sign)

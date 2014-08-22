@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 import hashlib
 import random
-import time
+import time, datetime
 import uuid
 
 '''
@@ -22,17 +22,24 @@ class RandomUtil:
     @staticmethod
     def random6Str():
         num = random.randint(100000, 999999)
-        return num
+        return str(num)
 
     @staticmethod
     def random9Str():
         num = random.random() * (1<<29)
-        return int(num)
+        return str(int(num))
 
     @staticmethod
     def random16Str():
         num = random.randint(10,99)
         result = '%.4f%d' %(time.time(), num)
+        result = result.replace('.','')
+        return result
+
+    @staticmethod
+    def random20Str():
+        num = random.randint(10,99)
+        result = '%s%.4f%d' %(time.localtime().tm_year,time.time(), num)
         result = result.replace('.','')
         return result
 
@@ -50,6 +57,12 @@ class DateUtil:
     def getDate(format='%Y%m'):
         t = time.localtime(time.time())
         return time.strftime(format, t)
+
+    @staticmethod
+    def getCutDate(month=0, format='%Y%m'):
+        now = datetime.datetime.now()
+        now = now - datetime.timedelta(days=month*31)
+        return now.strftime(format)
 
 '''
 class JSONUtil:

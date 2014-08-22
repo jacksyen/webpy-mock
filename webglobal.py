@@ -8,9 +8,9 @@
 # Created: 二  8月  5 23:15:01 2014 (+0800)
 # Version: 
 # Package-Requires: ()
-# Last-Updated: 周三 八月  6 09:54:53 2014 (+0800)
+# Last-Updated: 周四 八月 21 15:44:01 2014 (+0800)
 #           By: Administrator
-#     Update #: 11
+#     Update #: 112
 # URL: 
 # Doc URL: 
 # Keywords: 
@@ -47,18 +47,208 @@
 # Code:
 class Global:
 
+    # 帐号欠费信息
+    GLOBAL_ACCOUNT_ARREARS = {
+        '1000001': [
+            {
+                'startCount': 100,
+                'count': 20,
+                'price': 1.78,
+                'breach': '0.00'},
+            {
+                'startCount': 23,
+                'count': 10,
+                'price': 1.78,
+                'breach': '0.00'}],
+        '1000002': [
+            {
+                'startCount': 110,
+                'count': 20,
+                'price': 1.78,
+                'breach': '0.00'}],
+        '1000003': [
+            {
+                'startCount': 80,
+                'count': 20,
+                'price': 1.78,
+                'breach': '0.00'},
+            {
+                'startCount': 180,
+                'count': 42,
+                'price': 1.78,
+                'breach': '0.00'},
+            {
+                'startCount': 3808,
+                'count': 37,
+                'price': 1.78,
+                'breach': '0.00'}],
+        '1000004': [
+            {
+                'startCount': 10,
+                'count': 20,
+                'price': 1.78,
+                'breach': '0.00'}],
+        '1000005': [
+            {
+                'startCount': 56,
+                'count': 20,
+                'price': 1.78,
+                'breach': '0.00'},
+            {
+                'startCount': 156,
+                'count': 57,
+                'price': 1.78,
+                'breach': '0.00'}],
+        '1000006': [
+            {
+                'startCount': 10,
+                'count': 20,
+                'price': 1.78,
+                'breach': '0.00'}],
+        '1000008': [
+            {
+                'startCount': 100,
+                'count': 20,
+                'price': 1.78,
+                'breach': '0.00'}],
+        '2000001': [
+            {
+                'startCount': 11,
+                'count': 20,
+                'price': 2.78,
+                'breach': '0.00'},
+            {
+                'startCount': 12,
+                'count': 20,
+                'price': 2.78,
+                'breach': '0.00'}],
+        '2000002': [
+            {
+                'startCount': 12,
+                'count': 20,
+                'price': 2.78,
+                'breach': '0.00'}],
+        '2000003': [
+            {
+                'startCount': 13,
+                'count': 20,
+                'price': 2.78,
+                'breach': '0.00'}],
+        '2000004': [
+            {
+                'startCount': 89,
+                'count': 20,
+                'price': 2.78,
+                'breach': '0.00'}],
+        '2000005': [
+            {
+                'startCount': 12,
+                'count': 20,
+                'price': 2.78,
+                'breach': '0.00'}],
+        '2000006': [
+            {
+                'startCount': 89,
+                'count': 20,
+                'price': 2.78,
+                'breach': '0.00'}],
+        '2000008': [
+            {
+                'startCount': 57,
+                'count': 20,
+                'price': 2.78,
+                'breach': '0.00'}],
+        '3000001': [
+            {
+                'startCount': 78,
+                'count': 20,
+                'price': 0.67,
+                'breach': '0.00'},
+            {
+                'startCount': 108,
+                'count': 20,
+                'price': 0.67,
+                'breach': '0.00'}],
+        '3000002': [
+            {
+                'startCount': 78,
+                'count': 20,
+                'price': 0.67,
+                'breach': '0.00'},
+            {
+                'startCount': 18,
+                'count': 39,
+                'price': 0.67,
+                'breach': '0.00'}],
+        '3000003': [
+            {
+                'startCount': 16,
+                'count': 20,
+                'price': 0.67,
+                'breach': '0.00'}],
+        '3000004': [
+            {
+                'startCount': 43,
+                'count': 20,
+                'price': 0.67,
+                'breach': '0.00'},
+            {
+                'startCount': 438,
+                'count': 78,
+                'price': 0.67,
+                'breach': '0.00'},
+            {
+                'startCount': 48,
+                'count': 566,
+                'price': 0.67,
+                'breach': '0.00'}],
+        '3000005': [
+            {
+                'startCount': 11,
+                'count': 20,
+                'price': 0.67,
+                'breach': '0.00'}],
+        '3000006': [
+            {
+                'startCount': 18,
+                'count': 20,
+                'price': 0.67,
+                'breach': '0.00'},
+            {
+                'startCount': 189,
+                'count': 17,
+                'price': 0.67,
+                'breach': '0.00'},
+            {
+                'startCount': 7810,
+                'count': 73,
+                'price': 0.67,
+                'breach': '0.00'},
+            {
+                'startCount': 779,
+                'count': 32,
+                'price': 0.67,
+                'breach': '0.00'}],
+        '3000008': [
+            {
+                'startCount': 57,
+                'count': 20,
+                'price': 0.67,
+                'breach': '0.00'}],
+        }
+
     GLOBAL_ACCOUNT = [
         # 水费
         # 直接成功
-        {'userCode': '1000001', 'userName': '东家', 'queryStatus': 'true', 'queryResultCode': '0000000', 'address': '重庆市渝中区88号', 'memo': '缴费成功', 'paymentMoney': 120.00, 'paymentStatus': 'SUCCESS', 'paymentResultCode': '0000000', 'paymentType': '000010'},
+        {'userCode': '1000001', 'userName': '东家', 'queryStatus': 'true', 'queryResultCode': '0000000', 'address': '重庆市渝中区88号', 'memo': '缴费成功', 'paymentStatus': 'SUCCESS', 'paymentResultCode': '0000000', 'paymentType': '000010'},
         # 直接失败
-        {'userCode': '1000002', 'userName': '李嘉家', 'queryStatus': 'true', 'queryResultCode': '0000000', 'address': '重庆市江北区999号', 'memo': '缴费失败', 'paymentMoney': 20.00, 'paymentStatus': 'FAIL', 'paymentResultCode': '0000106', 'paymentType': '000010'},
+        {'userCode': '1000002', 'userName': '李嘉家', 'queryStatus': 'true', 'queryResultCode': '0000000', 'address': '重庆市江北区999号', 'memo': '缴费失败', 'paymentStatus': 'FAIL', 'paymentResultCode': '0000106', 'paymentType': '000010'},
         # 挂起转失败
-        {'userCode': '1000003', 'userName': '李嘉家', 'queryStatus': 'true', 'queryResultCode': '0000000','address': '重庆市江北区999号', 'memo': '缴费处理中', 'paymentMoney': 10.90, 'paymentStatus': 'HANGUP', 'paymentResultCode': '0000107', 'paymentType': '000010', 'rechangeStatus': 'FAIL'},
+        {'userCode': '1000003', 'userName': '李嘉家', 'queryStatus': 'true', 'queryResultCode': '0000000','address': '重庆市江北区999号', 'memo': '缴费处理中', 'paymentStatus': 'HANGUP', 'paymentResultCode': '0000107', 'paymentType': '000010', 'rechangeStatus': 'FAIL'},
         # 挂起转成功
-        {'userCode': '1000004', 'userName': '李家', 'queryStatus': 'true', 'queryResultCode': '0000000','address': '重庆市渝北区109号', 'memo': '缴费处理中', 'paymentMoney': 101.01, 'paymentStatus': 'HANGUP', 'paymentResultCode': '0000107', 'paymentType': '000010', 'rechangeStatus': 'SUCCESS'},
+        {'userCode': '1000004', 'userName': '李家', 'queryStatus': 'true', 'queryResultCode': '0000000','address': '重庆市渝北区109号', 'memo': '缴费处理中', 'paymentStatus': 'HANGUP', 'paymentResultCode': '0000107', 'paymentType': '000010', 'rechangeStatus': 'SUCCESS'},
         # 一直挂起
-        {'userCode': '1000005', 'userName': '郑中', 'queryStatus': 'true', 'queryResultCode': '0000000','address': '重庆市江北区999号', 'memo': '缴费处理中', 'paymentMoney': 10.90, 'paymentStatus': 'HANGUP', 'paymentResultCode': '0000107', 'isHangup': 1, 'paymentType': '000010'},
+        {'userCode': '1000005', 'userName': '郑中', 'queryStatus': 'true', 'queryResultCode': '0000000','address': '重庆市江北区999号', 'memo': '缴费处理中', 'paymentStatus': 'HANGUP', 'paymentResultCode': '0000107', 'isHangup': 1, 'paymentType': '000010'},
         # 异常
         {'userCode': '1000006', 'userName': '阿訇', 'queryStatus': 'false', 'queryResultCode': '0000205', 'paymentType': '000010'},
         # 没有欠费信息
@@ -66,31 +256,31 @@ class Global:
 
         # 气费
         # 直接成功
-        {'userCode': '2000001', 'userName': '么么', 'queryStatus': 'true', 'queryResultCode': '0000000','address': '重庆市渝中区门店8号', 'memo': '缴费成功', 'paymentMoney': 312.88, 'paymentStatus': 'SUCCESS', 'paymentResultCode': '0000000', 'paymentType': '000020'},
+        {'userCode': '2000001', 'userName': '么么', 'queryStatus': 'true', 'queryResultCode': '0000000','address': '重庆市渝中区门店8号', 'memo': '缴费成功', 'paymentStatus': 'SUCCESS', 'paymentResultCode': '0000000', 'paymentType': '000020'},
         # 直接失败
-        {'userCode': '2000002', 'userName': '刘尼', 'queryStatus': 'true', 'queryResultCode': '0000000','address': '重庆市江北区洋河北路10号', 'memo': '缴费失败', 'paymentMoney': 39.09, 'paymentStatus': 'FAIL', 'paymentResultCode': '0000106', 'paymentType': '000020'},
+        {'userCode': '2000002', 'userName': '刘尼', 'queryStatus': 'true', 'queryResultCode': '0000000','address': '重庆市江北区洋河北路10号', 'memo': '缴费失败', 'paymentStatus': 'FAIL', 'paymentResultCode': '0000106', 'paymentType': '000020'},
         # 挂起转失败
-        {'userCode': '2000003', 'userName': '哈格', 'queryStatus': 'true', 'queryResultCode': '0000000','address': '重庆市九龙坡区12号', 'memo': '缴费处理中', 'paymentMoney': 19.10, 'paymentStatus': 'HANGUP', 'paymentResultCode': '0000107', 'paymentType': '000020', 'rechangeStatus': 'FAIL'},
+        {'userCode': '2000003', 'userName': '哈格', 'queryStatus': 'true', 'queryResultCode': '0000000','address': '重庆市九龙坡区12号', 'memo': '缴费处理中', 'paymentStatus': 'HANGUP', 'paymentResultCode': '0000107', 'paymentType': '000020', 'rechangeStatus': 'FAIL'},
         # 挂起转成功
-        {'userCode': '2000004', 'userName': '哈格', 'queryStatus': 'true', 'queryResultCode': '0000000','address': '重庆市九龙坡区12号', 'memo': '缴费处理中', 'paymentMoney': 19.10, 'paymentStatus': 'HANGUP', 'paymentResultCode': '0000107', 'paymentType': '000020', 'rechangeStatus': 'SUCCESS'},
+        {'userCode': '2000004', 'userName': '哈格', 'queryStatus': 'true', 'queryResultCode': '0000000','address': '重庆市九龙坡区12号', 'memo': '缴费处理中', 'paymentStatus': 'HANGUP', 'paymentResultCode': '0000107', 'paymentType': '000020', 'rechangeStatus': 'SUCCESS'},
         # 一直挂起
-        {'userCode': '2000005', 'userName': '郑中', 'queryStatus': 'true', 'queryResultCode': '0000000','address': '重庆市江北区999号', 'memo': '缴费处理中', 'paymentMoney': 10.90, 'paymentStatus': 'HANGUP', 'paymentResultCode': '0000107', 'isHangup': 1, 'paymentType': '000020'},
+        {'userCode': '2000005', 'userName': '郑中', 'queryStatus': 'true', 'queryResultCode': '0000000','address': '重庆市江北区999号', 'memo': '缴费处理中', 'paymentStatus': 'HANGUP', 'paymentResultCode': '0000107', 'isHangup': 1, 'paymentType': '000020'},
         # 异常
         {'userCode': '2000006', 'userName': '阿訇', 'queryStatus': 'false', 'queryResultCode': '0000205', 'paymentType': '000020'},
         # 没有欠费信息
         {'userCode': '2000008', 'userName': '张尼', 'queryStatus': 'true', 'queryResultCode': '0000121', 'paymentType': '000020'},
 
         # 电费
-        # 直接成功
-        {'userCode': '3000001', 'userName': '占方式', 'queryStatus': 'true', 'queryResultCode': '0000000','address': '重庆市渝中区11号', 'memo': '缴费成功', 'paymentMoney': 81.20, 'paymentStatus': 'SUCCESS', 'paymentResultCode': '0000000', 'paymentType': '000030'},
+        # 直接成功(缴费后变换成无缴费状态)
+        {'userCode': '3000001', 'userName': '占方式', 'queryStatus': 'true', 'queryResultCode': '0000000','address': '重庆市渝中区11号', 'memo': '缴费成功', 'paymentStatus': 'SUCCESS', 'paymentResultCode': '0000000', 'paymentType': '000030', 'flag': True},
         # 直接失败
-        {'userCode': '3000002', 'userName': '张三丰', 'queryStatus': 'true', 'queryResultCode': '0000000','address': '重庆市江北区健康路121号', 'memo': '缴费失败', 'paymentMoney': 9.02, 'paymentStatus': 'FAIL', 'paymentResultCode': '0000106', 'paymentType': '000030'},
+        {'userCode': '3000002', 'userName': '张三丰', 'queryStatus': 'true', 'queryResultCode': '0000000','address': '重庆市江北区健康路121号', 'memo': '缴费失败', 'paymentStatus': 'FAIL', 'paymentResultCode': '0000106', 'paymentType': '000030'},
         # 挂起转失败
-        {'userCode': '3000003', 'userName': '杨富', 'queryStatus': 'true', 'queryResultCode': '0000000','address': '重庆市渝中区龙组路89号', 'memo': '缴费处理中', 'paymentMoney': 190.90, 'paymentStatus': 'HANGUP', 'paymentResultCode': '0000107', 'paymentType': '000030', 'rechangeStatus': 'FAIL'},
+        {'userCode': '3000003', 'userName': '杨富', 'queryStatus': 'true', 'queryResultCode': '0000000','address': '重庆市渝中区龙组路89号', 'memo': '缴费处理中', 'paymentStatus': 'HANGUP', 'paymentResultCode': '0000107', 'paymentType': '000030', 'rechangeStatus': 'FAIL'},
         # 挂起转成功
-        {'userCode': '3000004', 'userName': '高建', 'queryStatus': 'true', 'queryResultCode': '0000000','address': '重庆市渝中区龙组路89号', 'memo': '缴费处理中', 'paymentMoney': 190.90, 'paymentStatus': 'HANGUP', 'paymentResultCode': '0000107', 'paymentType': '000030', 'rechangeStatus': 'SUCCESS'},
+        {'userCode': '3000004', 'userName': '高建', 'queryStatus': 'true', 'queryResultCode': '0000000','address': '重庆市渝中区龙组路89号', 'memo': '缴费处理中', 'paymentStatus': 'HANGUP', 'paymentResultCode': '0000107', 'paymentType': '000030', 'rechangeStatus': 'SUCCESS'},
         # 一直挂起
-        {'userCode': '3000005', 'userName': '郑中', 'queryStatus': 'true', 'queryResultCode': '0000000','address': '重庆市江北区999号', 'memo': '缴费处理中', 'paymentMoney': 10.90, 'paymentStatus': 'HANGUP', 'paymentResultCode': '0000107', 'isHangup': 1, 'paymentType': '000030'},
+        {'userCode': '3000005', 'userName': '郑中', 'queryStatus': 'true', 'queryResultCode': '0000000','address': '重庆市江北区999号', 'memo': '缴费处理中', 'paymentStatus': 'HANGUP', 'paymentResultCode': '0000107', 'isHangup': 1, 'paymentType': '000030'},
         # 异常
         {'userCode': '3000006', 'userName': '阿訇', 'queryStatus': 'false', 'queryResultCode': '0000205', 'paymentType': '000030'},
         # 没有欠费信息
@@ -119,6 +309,8 @@ class Global:
     GLOBAL_TABLE_BALANCE = 'easylife_merchant_balance'
     # 缴费用户表
     GLOBAL_TABLE_PAYMENT_USER = 'easylife_payment_user'
+    # 用户欠费信息表
+    GLOBAL_TABLE_USER_ARREARS = 'easylife_user_arrears'
 
     # 结果码
     GLOBAL_RESP_CODE = {

@@ -1,7 +1,9 @@
 body {
     font-size: 13px;
 }
-
+.clear{
+    clear: both;
+}
 .tr{
     border: 1px solid #ccc;
     border-bottom: 0px;
@@ -9,6 +11,33 @@ body {
     padding: 3px 3px;
     height: 20px;
     font-size: 13px;
+}
+.list-tr-title{
+    border-top: 0px;
+    color: #b99;
+    font-weight: 500;
+}
+.list-tr{
+    padding: 0px 0px;
+    border-top: 1px solid #ccc;
+}
+.list-tr button{
+    color: #fff;
+    text-shadow: 0 -1px 0 rgba(0,0,0,0.25);
+    background-color: #60b044;
+    background-image: linear-gradient(#8add6d, #60b044);
+    background-repeat: repeat-x;
+    border-color: #5ca941;
+    position: relative;
+    display: inline-block;
+    font-size: 13px;
+    font-weight: bold;
+    white-space: nowrap;
+    vertical-align: middle;
+    cursor: pointer;
+    border: 1px solid #d5d5d5;
+    border-radius: 3px;
+    -webkit-appearance: none;
 }
 .high{
     font-weight: bold;
@@ -25,14 +54,39 @@ body {
     line-height:18px;
     text-align: center;
     padding: 0px 5px 0px 5px;
-    width: 180px;
+    width: 10%;
 }
+.list{
+    background-color: #f1f6fb;
+    font-size: 12px;
+    border: 1px solid #ccc;
+    border-bottom: 0px;
+    font-size: 13px;
+    overflow: hidden;
+}
+.list-left{
+    float: left;
+    width: 10%;
+    /*background-color: #cef;
+    border-right: 1px solid #ccc;*/
+    text-align: center;
+    line-height: 40px;
+}
+.list-right{
+    float: right;
+    text-align: left;
+    width: 89%;
+}
+
 .left{
     text-align: left;
     padding-left: 5px;
 }
 .long{
     width: 300px;
+}
+.suplong{
+    width: 400px;
 }
 .short{
     width: 80px;

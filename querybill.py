@@ -10,7 +10,7 @@
 # Package-Requires: ()
 # Last-Updated:
 #           By:
-#     Update #: 39
+#     Update #: 87
 # URL:
 # Doc URL:
 # Keywords:
@@ -71,12 +71,14 @@ class QueryBill:
     查询欠费
     '''
     def queryBill(self, args):
-        self.db.execute('SELECT * FROM %s WHERE usercode = ?' %Global.GLOBAL_TABLE_PAYMENT_USER, (args.get('userCode'), ))
-        globals = self.db.fetchone()
-        if globals == None:
+        queryType = args.get('queryType')
+        userCode = args.get('userCode')
+        self.db.execute('SELECT * FROM %s WHERE usercode = ? and paymenttype = ?' %Global.GLOBAL_TABLE_PAYMENT_USER, (userCode, queryType))
+        userInfo = self.db.fetchone()
+        if userInfo == None:
             resultCode = '0000120'
         else:
-            resultCode = globals['queryresultcode']
+            resultCode = userInfo['queryresultcode']
         # 如果查询结果等于0000205，直接return
         if resultCode =='0000205':
             return None
@@ -88,20 +90,36 @@ class QueryBill:
             'success': 'T'
         }
         if resultCode == '0000000':
+            # 查询用户欠费信息
+            self.db.execute('SELECT * FROM %s WHERE usercode = ?' %Global.GLOBAL_TABLE_USER_ARREARS, (userCode, ))
+            userArrears = self.db.fetchall()
+            paymentMoney = 0
+            items = []
+            for arrear in userArrears:
+                item = {
+                    'channelCode': arrear['channelcode'],
+                    'charge': arrear['breach'],
+                    'month': arrear['month'],
+                    'payables': arrear['itemmoney'],
+                    'type': args.get('queryType')
+                    }
+                paymentMoney = float(format(float(paymentMoney) + arrear['itemmoney'], '.2f'))
+                items.append(item)
+            # 欠费信息
             info = {
-                'address': globals['address'],
+                'address': userInfo['address'],
                 'agencyCode': args.get('agencyCode'),
                 'extendInfo': {},
-                'items': [{'channelCode': RandomUtil.random9Str(), 'charge': globals['breach'], 'month': DateUtil.getDate(), 'payables': globals['paymentmoney'], 'type': args.get('queryType')}],
-                'success': globals['querystatus'],
-                'userCode': globals['usercode'],
-                'username': globals['username']
+                'items': items,
+                'success': userInfo['querystatus'],
+                'userCode': userInfo['usercode'],
+                'username': userInfo['username']
             }
             data['info'] = info
-            data['totalPayable'] = globals['paymentmoney']
+            data['totalPayable'] = str(paymentMoney)
         else:
             data['resultMessage'] = Global.GLOBAL_RESP_CODE.get(resultCode)
-        sign = '%s= %s%s' %('data', json.dumps(data), Global.GLOBAL_MERCHANTS.get('lencee'))
+        sign = '%s= %s%s' %('data', json.dumps(data, ensure_ascii=False), Global.GLOBAL_MERCHANTS.get('lencee'))
         result = {
             'data': data,
             'sign': MD5Util.md5(sign)
