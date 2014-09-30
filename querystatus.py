@@ -10,7 +10,7 @@
 # Package-Requires: ()
 # Last-Updated:
 #           By:
-#     Update #: 42
+#     Update #: 43
 # URL:
 # Doc URL:
 # Keywords:
@@ -106,7 +106,8 @@ class QueryStatus:
             'data': data,
             'sign': MD5Util.md5(sign)
         }
-        return result
+        #return result
+        return None
 
 #
 # querystatus.py ends here
